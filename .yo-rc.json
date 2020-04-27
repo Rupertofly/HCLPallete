@@ -1,0 +1,7 @@
+{
+  "@rupertofly/generator-rubyq": {
+    "promptValues": {
+      "scopeName": "rupertofly"
+    }
+  }
+}
