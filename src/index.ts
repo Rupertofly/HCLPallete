@@ -1,3 +1,4 @@
 import { render } from 'react-dom';
-import App from './app';
-render(App({}), document.querySelector('#app'));
+import React from 'react';
+import App from './App';
+render(React.createElement(App), document.querySelector('#app'));

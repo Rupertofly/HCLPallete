@@ -8,19 +8,9 @@ interface Props {
     x: number;
     drag: boolean;
     y: number;
+    lineY: number;
     hovRad?: number;
 }
-const StyCirc = styled.circle<{ rad: number; hovRad: number }>`
-    transform: scale(${(props) => props.rad});
-    transition: transform 0.05s ease-out;
-    :hover {
-        transform: scale(${(props) => props.hovRad});
-    }
-    &.drag {
-        box-shadow: 4px 4px 4px black;
-        transform: scale(${(props) => props.hovRad});
-    }
-`;
 
 export const Handle = ({
     fillC,
@@ -28,19 +18,35 @@ export const Handle = ({
     x,
     y,
     drag,
+    lineY,
     hovRad = 0.4,
     rad = 0.3,
-    strokeWeight = 0.05,
+    strokeWeight = 0.01,
 }: Props) => {
+    const [over, setOver] = React.useState(false);
+    const dis = y - lineY;
+
     return (
-        <g transform={`translate(${x} ${y})`}>
-            <StyCirc
+        <g transform={`translate(${x}, ${y})`}>
+            <path
+                stroke={'black'}
+                strokeWidth={strokeWeight}
+                d={`M-0.5,0L0,0`}
+                transform={`translate(0,${dis * -1})`}
+            ></path>
+            <path
+                stroke={'white'}
+                strokeWidth={strokeWeight}
+                d={`M0,0L0.5,0`}
+                transform={`translate(0,${dis * -1})`}
+            ></path>
+            <circle
                 fill={fillC}
                 stroke={strokeC}
-                rad={rad}
-                hovRad={hovRad}
-                strokeWidth={strokeWeight}
-                r={1}
+                onMouseEnter={() => setOver(true)}
+                onMouseLeave={() => setOver(false)}
+                strokeWidth={drag ? strokeWeight + 0.01 : strokeWeight}
+                r={over || drag ? rad + 0.01 : rad}
                 className={drag ? 'drag' : ''}
             />
         </g>

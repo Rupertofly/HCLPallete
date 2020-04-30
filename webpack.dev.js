@@ -14,6 +14,7 @@ const opts = {
         port: 8080,
         disableHostCheck: true,
         inline: true,
+        bonjour: true,
     },
     output: {
         path: path.join(__dirname, 'dist'),

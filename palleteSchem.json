@@ -1,0 +1,47 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$ref": "#/definitions/JSONPallete",
+    "definitions": {
+        "JSONPallete": {
+            "type": "object",
+            "properties": {
+                "shades": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "hues": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "colours": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "r": {
+                                    "type": "number"
+                                },
+                                "g": {
+                                    "type": "number"
+                                },
+                                "b": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": ["r", "g", "b"],
+                            "additionalProperties": false
+                        }
+                    }
+                }
+            },
+            "required": ["shades", "hues", "colours"],
+            "additionalProperties": true
+        }
+    }
+}

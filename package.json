@@ -1,7 +1,7 @@
 {
     "name": "@rupertofly/hcl-pallete",
     "version": "0.1.0",
-    "description": "Pallete for doing colour work",
+    "description": "Pallete for doing colour work c range between 1-131 l range 0-100",
     "main": "dist/index.js",
     "author": "Ruby Quail <ruby@rubyquail.design>",
     "license": "MIT",
@@ -9,7 +9,7 @@
         "test": "ts-node test/test.ts",
         "chrome": "/Applications/Chromium.app/Contents/MacOS/chromium --remote-debugging-port=9222 --app=\"http://localhost:8080\"",
         "build": "webpack --config webpack.prod.js",
-        "dev": "webpack-dev-server --config webpack.dev.js"
+        "dev": "webpack-dev-server --config webpack.dev.js --host 0.0.0.0"
     },
     "dependencies": {
         "d3": "^5.16.0",
