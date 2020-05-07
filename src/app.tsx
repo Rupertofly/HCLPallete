@@ -2,21 +2,17 @@ import React, { useState } from 'react';
 import Slider from './components/Slider';
 import * as d3 from 'd3';
 import pal from './defaultPallete.json';
+import nts from 'ntcjs';
+const f = nts.name('737373');
+
+console.log('f: ', f);
+
 interface Props {
     n?: string;
 }
 export const App = (props: Props) => {
     const [dh, dc, dl] = Object.values(pal.colours[0][0]);
-    const [colors, setCol] = useState(
-        d3.range(7).map(() => {
-            const dh = Math.random() * 360;
-            const dc = Math.random() * 130;
-            const dl = Math.random() * 100;
-            const { h, c, l } = d3.hcl(d3.hcl(dh, dc, dl).toString());
-
-            return { h, c, l };
-        })
-    );
+    const [colors, setCol] = useState(pal.colours.flat(1));
 
     const listener = (e: KeyboardEvent) => {
         if (e.key === 'a') {
@@ -35,7 +31,7 @@ export const App = (props: Props) => {
     return (
         <>
             <div>
-                <div id="h" style={{ display: 'flex' }}>
+                <div id='h' style={{ display: 'flex' }}>
                     {colors.map(({ h, c, l }, i) => {
                         const hcl = d3.hcl(h, c, l);
                         const cScale = d3
@@ -49,6 +45,7 @@ export const App = (props: Props) => {
                         return (
                             <Slider
                                 value={h / 360}
+                                key={i}
                                 realVal={dis ? null : realC.h / 360}
                                 min={0}
                                 max={360}
@@ -64,7 +61,7 @@ export const App = (props: Props) => {
                         );
                     })}
                 </div>
-                <div id="c" style={{ display: 'flex' }}>
+                <div id='c' style={{ display: 'flex' }}>
                     {colors.map(({ h, c, l }, i) => {
                         const hcl = d3.hcl(h, c, l);
                         const cScale = d3
@@ -78,6 +75,7 @@ export const App = (props: Props) => {
                         return (
                             <Slider
                                 value={c / 130}
+                                key={i}
                                 realVal={dis ? null : realC.c / 130}
                                 min={0}
                                 max={130}
@@ -93,7 +91,7 @@ export const App = (props: Props) => {
                         );
                     })}
                 </div>
-                <div id="l" style={{ display: 'flex' }}>
+                <div id='l' style={{ display: 'flex' }}>
                     {colors.map(({ h, c, l }, i) => {
                         const hcl = d3.hcl(h, c, l);
                         const cScale = d3
@@ -107,6 +105,7 @@ export const App = (props: Props) => {
                         return (
                             <Slider
                                 value={l / 100}
+                                key={i}
                                 realVal={dis ? null : realC.l / 100}
                                 min={0}
                                 max={100}
@@ -124,22 +123,67 @@ export const App = (props: Props) => {
                 </div>
             </div>
             <svg
-                height="4em"
-                width={`${colors.length * 4}em`}
-                viewBox={`0 0 ${colors.length} 1`}
-            >
+                height='5em'
+                width={`${colors.length * 5}em`}
+                viewBox={`0 0 ${colors.length * 5} 5`}>
                 {colors.map(({ h, c, l }, i) => {
                     return (
                         <rect
-                            x={i}
+                            x={i * 5}
+                            key={i}
                             y={0}
-                            width={1}
-                            height={1}
+                            width={4.5}
+                            height={5}
                             fill={d3.hcl(h, c, l).toString()}
                         />
                     );
                 })}
             </svg>
+            <div style={{ display: 'flex', width: `${colors.length * 5}em` }}>
+                {colors.map(({ h, c, l }, i) => {
+                    const name = nts.name(d3.hcl(h, c, l).hex())[1];
+                    const inp = React.useRef<HTMLInputElement>();
+
+                    if (inp.current) inp.current.value = d3.hcl(h, c, l).hex();
+
+                    return (
+                        <div style={{ width: '5em' }} key={i}>
+                            <span>{name}</span>
+                            <input
+                                type='text'
+                                ref={inp}
+                                size={6}
+                                defaultValue={d3.hcl(h, c, l).hex()}
+                                onKeyDown={(e) => {
+                                    if (/Enter/.test(e.key)) {
+                                        const n = inp.current.value;
+                                        const color = d3.hcl(n);
+
+                                        if (!isNaN(color.opacity)) {
+                                            setCol(
+                                                colors.map((cl, j) => {
+                                                    return j === i
+                                                        ? {
+                                                              ...cl,
+                                                              h: isNaN(color.h)
+                                                                  ? 0
+                                                                  : color.h,
+                                                              c: color.c,
+                                                              l: color.l,
+                                                          }
+                                                        : cl;
+                                                })
+                                            );
+                                        } else {
+                                            console.log(color);
+                                        }
+                                    }
+                                }}
+                            />
+                        </div>
+                    );
+                })}
+            </div>
         </>
     );
 };

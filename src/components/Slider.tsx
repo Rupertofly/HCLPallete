@@ -24,8 +24,8 @@ input[type='number']::-webkit-inner-spin-button {
 }
 html,
 body {
-  position: fixed;
-  overflow: hidden;
+  /* position: fixed;
+  overflow: hidden; */
 
 }
 `;
@@ -37,7 +37,7 @@ export const Slider = ({
     value,
     realVal,
     color,
-    width = '4em',
+    width = '5em',
     height = '16em',
 }: Props) => {
     const val = value;
@@ -88,11 +88,10 @@ export const Slider = ({
                 flexDirection: 'column',
                 width: width,
                 alignItems: 'middle',
-            }}
-        >
+            }}>
             <Glob />
             <svg
-                viewBox="0 0 1 5"
+                viewBox='0 0 1 5'
                 height={height}
                 width={width}
                 ref={slider}
@@ -102,34 +101,33 @@ export const Slider = ({
                 onTouchEnd={end}
                 onMouseUp={end}
                 onMouseMove={move}
-                onMouseLeave={(e) => setDrag(false)}
-            >
-                <mask id="rectMask">
+                onMouseLeave={(e) => setDrag(false)}>
+                <mask id='rectMask'>
                     <rect
-                        fill="white"
-                        x="0"
-                        y="0.5"
-                        width="1"
-                        height="4"
-                        rx="0.25"
+                        fill='white'
+                        x='0'
+                        y='0.5'
+                        width='1'
+                        height='4'
+                        rx='0.25'
                     />
                 </mask>
                 <rect
-                    stroke="black"
-                    fill="#ff000000"
-                    strokeWidth="0.03"
-                    x="-0.075"
-                    y=".45"
-                    width="1.15"
-                    height="4.1"
-                    rx="0.25"
+                    stroke='black'
+                    fill='#ff000000'
+                    strokeWidth='0.03'
+                    x='-0.075'
+                    y='.45'
+                    width='1.15'
+                    height='4.1'
+                    rx='0.25'
                 />
                 <rect
                     width={1}
                     height={val * 4}
                     y={0.5 + (1 - val) * 4}
                     fill={color}
-                    mask="url(#rectMask)"
+                    mask='url(#rectMask)'
                 />
                 <Handle
                     x={0.5}
@@ -141,7 +139,7 @@ export const Slider = ({
                 />
             </svg>
             <input
-                type="text"
+                type='text'
                 ref={inp}
                 defaultValue={(min + val * (max - min)).toFixed(1)}
                 min={min}
