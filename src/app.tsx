@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Slider from './components/Slider';
+import Slider from './components/LinearSlider';
 import * as d3 from 'd3';
 import pal from './defaultPallete.json';
 import nts from 'ntcjs';

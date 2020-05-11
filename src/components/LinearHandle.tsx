@@ -32,14 +32,12 @@ export const Handle = ({
                 stroke={'black'}
                 strokeWidth={strokeWeight}
                 d={`M-0.5,0L0,0`}
-                transform={`translate(0,${dis * -1})`}
-            ></path>
+                transform={`translate(0,${dis * -1})`}></path>
             <path
                 stroke={'white'}
                 strokeWidth={strokeWeight}
                 d={`M0,0L0.5,0`}
-                transform={`translate(0,${dis * -1})`}
-            ></path>
+                transform={`translate(0,${dis * -1})`}></path>
             <circle
                 fill={fillC}
                 stroke={strokeC}

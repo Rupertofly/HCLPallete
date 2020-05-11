@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import * as d3 from 'd3';
-import Handle from './Handle';
+import Handle from './LinearHandle';
 import * as T from '../types';
 
 import { createGlobalStyle } from 'styled-components';
@@ -15,7 +15,7 @@ interface Props {
     color: string;
     realVal?: number;
 }
-const Glob = createGlobalStyle`
+const GlobalStyles = createGlobalStyle`
 input[type='number']::-webkit-outer-spin-button,
 input[type='number']::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -89,7 +89,7 @@ export const Slider = ({
                 width: width,
                 alignItems: 'middle',
             }}>
-            <Glob />
+            <GlobalStyles />
             <svg
                 viewBox='0 0 1 5'
                 height={height}

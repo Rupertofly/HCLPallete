@@ -1,5 +1,5 @@
 import { render } from 'react-dom';
 import React from 'react';
 import App from './App';
-import DiskSlider from './components/DiskSlider';
-render(React.createElement(DiskSlider), document.querySelector('#app'));
+import Dst from './diskTestApp';
+render(React.createElement(Dst), document.querySelector('#app'));

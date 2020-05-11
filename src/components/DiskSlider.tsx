@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { InferTypeNode, InferencePriority } from 'typescript';
+import { drag } from 'd3';
 const TAU = Math.PI * 2;
 const toRAD = (a) => a * (TAU / 360);
 const toDEG = (a) => a * (360 / TAU);
@@ -38,10 +39,20 @@ const DiskSlider = ({
 
         function updateValue({ x, y }: { x: number; y: number }) {
             if (!isDragged.current) return;
-            const angle = Math.atan2(y, x);
+            const rawAngle = Math.atan2(y, x);
 
-            output(toDEG(angle));
+            const angle = rawAngle < 0 ? TAU + rawAngle : rawAngle;
+
+            output(angle / TAU);
         }
+        svgRef.current.onmousemove = (e) => {
+            const { offsetX: x, offsetY: y } = e;
+
+            updateValue({ x: x - w / 2, y: y - h / 2 });
+        };
+        svgRef.current.onmouseup = () => {
+            isDragged.current = false;
+        };
     });
 
     return (
@@ -54,8 +65,12 @@ const DiskSlider = ({
             <circle
                 cx={Math.cos(toRAD(value)) * 0.75}
                 cy={Math.sin(toRAD(value)) * 0.75}
-                r={0.02}
+                r={0.1}
                 fill={color}
+                onMouseDown={(e) => {
+                    isDragged.current = true;
+                }}
+                style={{ outline: '0.1px solid #ff0000' }}
             />
         </svg>
     );
