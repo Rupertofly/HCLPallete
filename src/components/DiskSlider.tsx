@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import * as d3 from 'd3';
-import { InferTypeNode, InferencePriority } from 'typescript';
-import { drag } from 'd3';
-const TAU = Math.PI * 2;
+import * as t from '../types';
+import { DiskBack } from './DiskBack';
+import DM from './DiskMarker';
+import DH from './DiskHandle';
+export const TAU = Math.PI * 2;
 const toRAD = (a) => a * (TAU / 360);
 const toDEG = (a) => a * (360 / TAU);
 
@@ -15,18 +16,22 @@ interface Props {
     color?: string;
     realVal?: number;
 }
-
 const DiskSlider = ({
     c = 80,
-    l = 60,
+    l = 30,
     rad = 16,
-    value = 180,
+    value = 90,
     output = (v) => console.log(v),
     color = '#555555',
 }: Props) => {
-    const isDragged = useRef(false);
+    const [isDragged, setDrag] = useState(false);
     const svgRef = useRef<SVGSVGElement>();
+    const inpRef = useRef<HTMLInputElement>();
+    const divRef = useRef<HTMLDivElement>();
+    const isLight = l < 50;
+    const val = value;
 
+    if (inpRef.current) inpRef.current.value = value.toFixed(1);
     useEffect(() => {
         const {
             width: {
@@ -38,8 +43,8 @@ const DiskSlider = ({
         } = svgRef.current;
 
         function updateValue({ x, y }: { x: number; y: number }) {
-            if (!isDragged.current) return;
-            const rawAngle = Math.atan2(y, x);
+            if (!isDragged) return;
+            const rawAngle = Math.atan2(y, x) + TAU / 4;
 
             const angle = rawAngle < 0 ? TAU + rawAngle : rawAngle;
 
@@ -50,79 +55,62 @@ const DiskSlider = ({
 
             updateValue({ x: x - w / 2, y: y - h / 2 });
         };
-        svgRef.current.onmouseup = () => {
-            isDragged.current = false;
+        divRef.current.onmouseup = () => {
+            setDrag(false);
         };
     });
 
     return (
-        <svg
-            width={rad + 'em'}
-            ref={svgRef}
-            height={rad + 'em'}
-            viewBox={`-1 -1 2 2`}>
-            <DiskBack c={c} l={l} count={128} />
-            <circle
-                cx={Math.cos(toRAD(value)) * 0.75}
-                cy={Math.sin(toRAD(value)) * 0.75}
-                r={0.1}
-                fill={color}
-                onMouseDown={(e) => {
-                    isDragged.current = true;
+        <div
+            style={{ display: 'inline-grid', gridTemplate: '1fr / 1fr' }}
+            ref={divRef}>
+            <svg
+                width={rad + 'em'}
+                ref={svgRef}
+                height={rad + 'em'}
+                style={{ gridArea: '1/1/1/1' }}
+                viewBox={`-1 -1 2 2`}>
+                <DiskBack c={c} l={l} count={128} />
+                <DM light={isLight} value={value / 360} />
+                <DH
+                    colour={color}
+                    light={isLight}
+                    value={value / 360}
+                    mD={(e) => {
+                        setDrag(true);
+                    }}
+                    pushed={isDragged}
+                />
+            </svg>
+            <input
+                type='text'
+                ref={inpRef}
+                defaultValue={val}
+                style={{
+                    width: (6 / 16) * rad + 'em',
+                    height: (2 / 16) * rad + 'em',
+                    margin: 'auto',
+                    gridArea: '1/1/1/1',
+                    border: '#00000000',
+                    font: (1.5 / 16) * rad + 'em Fira Code',
+                    color: ' #232323',
+                    textAlign: 'center',
                 }}
-                style={{ outline: '0.1px solid #ff0000' }}
+                onKeyDown={(e) => {
+                    if (/[0-9]|Backspace|Delete|Left|Right/.test(e.key)) {
+                        return true;
+                    } else e.preventDefault();
+                    if (/Enter/.test(e.key)) {
+                        let n = Number.parseFloat(inpRef.current.value) ?? 0;
+
+                        n = n < 0 ? 0 : n > 360 ? 360 : n;
+                        output(n / 360);
+                    }
+                }}
             />
-        </svg>
+        </div>
     );
 };
 
 export default DiskSlider;
-type BackProps = { c: number; l: number; count: number };
-const DiskBack = ({ c, l, count }: BackProps) => {
-    const { floor: flr, random: rnd } = Math;
-    const idKey =
-        'mask' +
-        flr(rnd() * 6400)
-            .toString(16)
-            .slice(0, 4);
-    const outerEdge = d3.arc()({
-        startAngle: 0,
-        endAngle: TAU,
-        outerRadius: 0.9,
-        innerRadius: 0.6,
-    });
-    const section = d3
-        .arc<{ i: number; disp: boolean }>()
-        .innerRadius(({ disp }) => (disp ? 0.59 : 0.65))
-        .outerRadius(({ disp }) => (disp ? 0.91 : 0.85))
-        .startAngle(({ i }) => i * (TAU / count) - 0.1)
-        .endAngle(({ i }) => (i + 1) * (TAU / count));
-
-    return (
-        <>
-            <defs></defs>
-            <mask id={idKey}>
-                <rect x='-1' y='-1' width='2' height='2' fill='black' />
-                <path d={outerEdge} fill='white' />
-            </mask>
-
-            <g mask={'url(#' + idKey + ')'}>
-                {d3.range(count).map((i) => (
-                    <path
-                        d={section({
-                            i,
-                            disp: d3.hcl(i * (360 / count), c, l).displayable(),
-                        })}
-                        fill={d3.hcl(i * (360 / count), c, l).toString()}
-                        key={i}
-                        opacity={
-                            d3.hcl(i * (360 / count), c, l).displayable()
-                                ? 1
-                                : 0.1
-                        }
-                    />
-                ))}
-            </g>
-        </>
-    );
-};
+export type BackProps = { c: number; l: number; count: number };

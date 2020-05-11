@@ -142,9 +142,6 @@ export const Slider = ({
                 type='text'
                 ref={inp}
                 defaultValue={(min + val * (max - min)).toFixed(1)}
-                min={min}
-                max={max}
-                step={(max - min) / 10}
                 onKeyDown={(e) => {
                     if (/[0-9]|Backspace|Delete|Left|Right/.test(e.key)) {
                         return true;

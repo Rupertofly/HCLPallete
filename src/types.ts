@@ -3,6 +3,15 @@ export interface ColorLocator {
     hue: number;
     shade: number;
 }
+interface UIColours extends Readonly<any> {
+    readonly DARK_COL: string;
+    readonly LIGHT_COL: string;
+}
+export enum UICOLOURS {
+    DARK_COL = '#373737',
+    LIGHT_COL = '#f0f0f0',
+}
+
 export interface ValueLocatior extends ColorLocator {
     p: HCLProp;
 }
