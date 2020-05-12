@@ -2,16 +2,21 @@ import React from 'react';
 import styled from 'styled-components';
 import * as d3 from 'd3';
 import Handle from './LinearHandle';
-import * as T from '../types';
-
+import * as t from '../types';
+import LM from './LinearMarker';
 import { createGlobalStyle } from 'styled-components';
+
+const OutBox = styled.rect<{ light: boolean }>`
+    fill: ${(p) => (p.light ? t.UICOLOURS.LIGHT_COL : t.UICOLOURS.DARK_COL)};
+    transition: fill 0.15s;
+`;
+
 interface Props {
     output: (v: number) => any;
     min?: number;
     max?: number;
     value: number;
-    width?: string | number;
-    height?: string | number;
+    height?: string;
     color: string;
     realVal?: number;
 }
@@ -37,16 +42,15 @@ export const Slider = ({
     value,
     realVal,
     color,
-    width = '5em',
     height = '16em',
 }: Props) => {
     const val = value;
-
+    const width = Number.parseFloat(height.match(/[0-9\.]*/)[0]) / 3 + 'em';
     // eslint-disable-next-line prefer-const
     let [dragging, setDrag] = React.useState(false);
-    const bar = React.useRef();
     const slider = React.useRef<SVGSVGElement>();
     const inp = React.useRef<HTMLInputElement>();
+    const l = d3.hcl(color).l;
 
     if (inp.current) inp.current.value = (min + val * (max - min)).toFixed(1);
 
@@ -91,7 +95,7 @@ export const Slider = ({
             }}>
             <GlobalStyles />
             <svg
-                viewBox='0 0 1 5'
+                viewBox='0 0 1.5 5'
                 height={height}
                 width={width}
                 ref={slider}
@@ -105,36 +109,47 @@ export const Slider = ({
                 <mask id='rectMask'>
                     <rect
                         fill='white'
-                        x='0'
+                        x='0.25'
                         y='0.5'
                         width='1'
                         height='4'
                         rx='0.25'
                     />
                 </mask>
-                <rect
-                    stroke='black'
-                    fill='#ff000000'
-                    strokeWidth='0.03'
-                    x='-0.075'
-                    y='.45'
-                    width='1.15'
+                <OutBox
+                    light={l < 50}
+                    strokeWidth='0'
+                    x='0.2'
+                    y='0.45'
+                    width='1.1'
                     height='4.1'
+                    rx='0.30'
+                />
+                <OutBox
+                    light={!(l < 50)}
+                    strokeWidth='0'
+                    x='0.25'
+                    y='0.45'
+                    width='1'
+                    height='4'
                     rx='0.25'
+                    mask='url(#rectMask)'
                 />
                 <rect
                     width={1}
                     height={val * 4}
                     y={0.5 + (1 - val) * 4}
+                    x='0.25'
                     fill={color}
                     mask='url(#rectMask)'
                 />
+                <LM value={realVal} light={!(l < 50)} />
                 <Handle
-                    x={0.5}
+                    x={0.75}
                     y={0.5 + (1 - val) * 4}
                     lineY={0.5 + (1 - (null == realVal ? val : realVal)) * 4}
                     fillC={color}
-                    strokeC={d3.hcl(color).l < 60 ? '#ffffff' : '#000000'}
+                    light={l < 50}
                     drag={dragging}
                 />
             </svg>
@@ -164,8 +179,14 @@ export const Slider = ({
                     appearance: 'textarea',
                     WebkitAppearance: 'none',
                     padding: 0,
+                    margin: '0 auto',
+                    marginTop: '-0.5em',
                     border: 0,
-                    fontSize: '1em',
+                    width: '3em',
+                    font:
+                        (1 / 16) * Number.parseInt(height as string) +
+                        'em Fira Code',
+                    color: ' #232323',
                     textAlign: 'center',
                 }}
             />

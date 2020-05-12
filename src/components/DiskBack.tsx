@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import * as d3 from 'd3';
 import { BackProps, TAU } from './DiskSlider';
 import * as t from '../types';
@@ -11,11 +11,13 @@ const OutEdge = styled.path<{ light: boolean }>`
 
 export const DiskBack = ({ c, l, count }: BackProps) => {
     const { floor: flr, random: rnd } = Math;
-    const idKey =
+    const idKey = useRef(
         'mask' +
-        flr(rnd() * 6400)
-            .toString(16)
-            .slice(0, 4);
+            flr(rnd() * 6400)
+                .toString(16)
+                .slice(0, 4)
+    );
+
     const outerEdge = d3.arc()({
         startAngle: 0,
         endAngle: TAU,
@@ -35,12 +37,12 @@ export const DiskBack = ({ c, l, count }: BackProps) => {
 
     return (
         <>
-            <mask id={idKey}>
+            <mask id={idKey.current}>
                 <rect x='-1' y='-1' width='2' height='2' fill='black' />
                 <path d={outerEdge} fill='white' />
             </mask>
             <OutEdge d={outerEdge} light={l < 50} />
-            <g mask={'url(#' + idKey + ')'}>
+            <g mask={'url(#' + idKey.current + ')'}>
                 {d3.range(count).map((i) => (
                     <path
                         d={section({

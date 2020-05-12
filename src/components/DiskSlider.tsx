@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as t from '../types';
+import { hcl, svg } from 'd3';
 import { DiskBack } from './DiskBack';
 import DM from './DiskMarker';
 import DH from './DiskHandle';
@@ -23,13 +24,14 @@ const DiskSlider = ({
     value = 90,
     output = (v) => console.log(v),
     color = '#555555',
+    realVal,
 }: Props) => {
     const [isDragged, setDrag] = useState(false);
     const svgRef = useRef<SVGSVGElement>();
     const inpRef = useRef<HTMLInputElement>();
     const divRef = useRef<HTMLDivElement>();
     const isLight = l < 50;
-    const val = value;
+    const rVal = realVal ?? hcl(hcl(value, c, l).toString()).h;
 
     if (inpRef.current) inpRef.current.value = value.toFixed(1);
     useEffect(() => {
@@ -53,6 +55,17 @@ const DiskSlider = ({
         svgRef.current.onmousemove = (e) => {
             const { offsetX: x, offsetY: y } = e;
 
+            e.preventDefault();
+            e.stopPropagation();
+            updateValue({ x: x - w / 2, y: y - h / 2 });
+        };
+        svgRef.current.ontouchmove = (e) => {
+            const { clientX: cx, clientY: cy } = e.touches[0];
+            const { x: bx, y: by } = svgRef.current.getBoundingClientRect();
+            const [x, y] = [cx - bx, cy - by];
+
+            e.preventDefault();
+            e.stopPropagation();
             updateValue({ x: x - w / 2, y: y - h / 2 });
         };
         divRef.current.onmouseup = () => {
@@ -62,7 +75,12 @@ const DiskSlider = ({
 
     return (
         <div
-            style={{ display: 'inline-grid', gridTemplate: '1fr / 1fr' }}
+            style={{
+                display: 'inline-grid',
+                width: rad + 'em',
+                height: rad + 'em',
+                gridTemplate: '1fr / 1fr',
+            }}
             ref={divRef}>
             <svg
                 width={rad + 'em'}
@@ -70,8 +88,8 @@ const DiskSlider = ({
                 height={rad + 'em'}
                 style={{ gridArea: '1/1/1/1' }}
                 viewBox={`-1 -1 2 2`}>
-                <DiskBack c={c} l={l} count={128} />
-                <DM light={isLight} value={value / 360} />
+                <DiskBack c={c} l={l} count={32} />
+                <DM light={isLight} value={rVal / 360} />
                 <DH
                     colour={color}
                     light={isLight}
@@ -85,10 +103,10 @@ const DiskSlider = ({
             <input
                 type='text'
                 ref={inpRef}
-                defaultValue={val}
+                defaultValue={value.toFixed(1)}
                 style={{
-                    width: (6 / 16) * rad + 'em',
-                    height: (2 / 16) * rad + 'em',
+                    width: 3 + 'em',
+                    height: 1.8 + 'em',
                     margin: 'auto',
                     gridArea: '1/1/1/1',
                     border: '#00000000',

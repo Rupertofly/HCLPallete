@@ -11,17 +11,24 @@ interface Props {
     value: number;
     mD: Function;
     pushed: boolean;
+
+    sW?: number;
+    hS?: number;
 }
 const smSize = 0.1;
 const hvSize = 0.15;
-const HCircle = styled.circle<Props>`
-    fill: ${(p) => p.colour};
-    stroke: ${({ light }) => (light ? UC.LIGHT_COL : UC.DARK_COL)};
+const HCircle = styled.circle.attrs<Props>((p) => ({
+    style: {
+        fill: p.colour,
+        stroke: p.light ? UC.LIGHT_COL : UC.DARK_COL,
+        transform: p.pushed ? `scale(${hvSize})` : undefined,
+    },
+}))<Props>`
     stroke-width: ${0.03 * (1 / smSize)};
     transform-box: fill-box;
-    transform-origin: 50% 50%;
-    transform: scale(${(p) => (p.pushed ? hvSize : smSize)});
+    transform-origin: center;
     transition: transform 0.15s, stroke 0.15s;
+    transform: scale(${smSize});
     &:hover {
         transform: scale(${hvSize});
     }
@@ -37,6 +44,7 @@ const DiskHandle = (p: Props) => {
             cy={yA * 0.7}
             {...p}
             onMouseDown={(e) => p.mD(e)}
+            onTouchStart={(e) => p.mD(e)}
         />
     );
 };
