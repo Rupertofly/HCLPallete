@@ -33,7 +33,7 @@ export default function DisktTestApp({}: Props): ReactElement {
 
     return (
         <>
-            <div style={{ fontFamily: 'Ubuntu Mono' }}>
+            <div style={{ fontFamily: 'Ubuntu Mono, monospace' }}>
                 <span>
                     &nbsp;&nbsp;{d3.range(state.colours[0].length).join('')}
                 </span>
