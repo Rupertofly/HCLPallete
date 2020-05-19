@@ -30,7 +30,7 @@ const DiskSlider = ({
     const svgRef = useRef<SVGSVGElement>();
     const inpRef = useRef<HTMLInputElement>();
     const divRef = useRef<HTMLDivElement>();
-    const isLight = l < 50;
+    const isLight = l <= 50;
     const rVal = realVal ?? hcl(hcl(value, c, l).toString()).h;
 
     if (inpRef.current) inpRef.current.value = value.toFixed(1);
@@ -115,7 +115,7 @@ const DiskSlider = ({
                     textAlign: 'center',
                 }}
                 onKeyDown={(e) => {
-                    if (/[0-9]|Backspace|Delete|Left|Right/.test(e.key)) {
+                    if (/[0-9]|Backspace|Delete|Left|Right|\./.test(e.key)) {
                         return true;
                     } else e.preventDefault();
                     if (/Enter/.test(e.key)) {
@@ -124,6 +124,10 @@ const DiskSlider = ({
                         n = n < 0 ? 0 : n > 360 ? 360 : n;
                         output(n / 360);
                     }
+                }}
+                onBlur={(e) => {
+                    inpRef.current.value = value.toFixed(1);
+                    output(value / 360);
                 }}
             />
         </div>

@@ -3,6 +3,9 @@ import Slider from './components/LinearSlider';
 import * as d3 from 'd3';
 import pal from './defaultPallete.json';
 import nts from 'ntcjs';
+import { useReducer } from 'react';
+import { palleteReducer } from './store';
+import defPal from './defaultPallete.json';
 const f = nts.name('737373');
 
 console.log('f: ', f);
@@ -13,7 +16,7 @@ interface Props {
 export const App = (props: Props) => {
     const [dh, dc, dl] = Object.values(pal.colours[0][0]);
     const [colors, setCol] = useState(pal.colours.flat(1));
-
+    const [state, dispatch] = useReducer(palleteReducer, defPal);
     const listener = (e: KeyboardEvent) => {
         if (e.key === 'a') {
             const r = Math.random();

@@ -520,6 +520,22 @@
             }
         ]
     ],
-    "shades": ["blue"],
-    "hues": ["gray"]
+    "shades": ["blue", "r", "r", "r", "r", "r", "r", "r", "r", "r"],
+    "hues": [
+        "gray",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "blue"
+    ]
 }

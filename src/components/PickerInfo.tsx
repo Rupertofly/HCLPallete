@@ -4,9 +4,9 @@ import * as t from '../types';
 import * as d3 from 'd3';
 import ntc from 'ntcjs';
 export interface PickerInfoProps {
-    color: t.col;
+    color: t.Col;
     height?: string;
-    output?: (a: t.col) => void;
+    output?: (a: t.Col) => void;
 }
 const Container = styled.div<{ height: string }>`
     height: ${(p) => p.height};
@@ -37,7 +37,7 @@ export function PickerInfo({
                     backgroundClip: 'content-box',
                     borderRadius: '1em',
                     border: `0.2em solid ${
-                        fill.l < 50 ? '#f0f0f0' : '#373737'
+                        fill.l <= 50 ? '#f0f0f0' : '#373737'
                     }`,
                     transition: 'border 0.15s',
                 }}></div>

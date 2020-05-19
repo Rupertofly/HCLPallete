@@ -15,15 +15,15 @@ export enum UICOLOURS {
 export interface ValueLocatior extends ColorLocator {
     p: HCLProp;
 }
-export type col = {
+export interface Col {
     h: number;
     c: number;
     l: number;
-};
+}
 export type JSONPallete = {
     shades: string[];
     hues: string[];
-    colours: col[][];
+    colours: Col[][];
 };
 // module 'ntcjs' {
 //     const content: any;
@@ -35,14 +35,17 @@ export enum COL_PROPS {
     l = 'l',
 }
 export enum ACTION_TYPES {
-    SET_VAL,
-    SET_COLOR,
-    RENAME,
-    LOAD_PALLETE,
-    SAVE_PALLETE,
-    REBUILD,
+    SET_VAL = 'setValue',
+    SET_COLOR = 'setColor',
+    ADD_LAYER = 'addLayer',
+    REMOVE_LAYER = 'removeLayer',
+    RENAME = 'rename',
+    LOAD_PALLETE = 'loadPallete',
+    SAVE_PALLETE = 'savePallete',
+    IMPORT_PALLETE = 'importPallete',
+    REBUILD = 'rebuild',
 }
-interface ActionBaseRequest {
+export interface ActionBaseRequest {
     type: ACTION_TYPES;
     data: Record<string, any>;
 }
@@ -63,15 +66,75 @@ export interface SetColorActionRequest {
         color: string;
     };
 }
-export interface RenameActionRequest {
-    type: ACTION_TYPES.RENAME;
+export interface AddLayerActionRequest {
+    type: ACTION_TYPES.ADD_LAYER;
     data: {
-        shade: number;
-        hue: number;
+        layerType: 'hue' | 'shade';
         name: string;
     };
 }
-export interface ActionRequest<A extends ActionBaseRequest> {
+export interface RemoveLayerActionRequest {
+    type: ACTION_TYPES.REMOVE_LAYER;
+    data: {
+        layerType: 'hue' | 'shade';
+        index: number;
+    };
+}
+
+export interface RenameActionRequest {
+    type: ACTION_TYPES.RENAME;
+    data: {
+        layerType: 'hue' | 'shade';
+        index: number;
+        name: string;
+    };
+}
+export interface LoadPalleteActionRequest {
+    type: ACTION_TYPES.LOAD_PALLETE;
+    data: {
+        name: string;
+    };
+}
+export interface SavePalleteActionRequest {
+    type: ACTION_TYPES.SAVE_PALLETE;
+    data: {
+        name: string;
+    };
+}
+export interface ImportPalleteActionRequest {
+    type: ACTION_TYPES.IMPORT_PALLETE;
+    data: {
+        dataString: string;
+    };
+}
+export interface RebuildPalleteActionRequest {
+    type: ACTION_TYPES.REBUILD;
+    data: {};
+}
+export type ActionOptions =
+    | SetColorActionRequest
+    | SetValActionRequest
+    | RenameActionRequest
+    | AddLayerActionRequest
+    | RemoveLayerActionRequest
+    | LoadPalleteActionRequest
+    | SavePalleteActionRequest
+    | ImportPalleteActionRequest
+    | RebuildPalleteActionRequest;
+export interface ActionRequest<A extends ActionOptions> {
     type: A['type'];
     data: A['data'];
 }
+export type reducerFunction<A extends ActionOptions> = (
+    state: JSONPallete,
+    action: A
+) => JSONPallete;
+interface SelectAction {
+    action: 'select';
+    tile: [number, number];
+}
+interface DeselectAction {
+    action: 'deselect';
+    tile?: [number, number];
+}
+export type SelectionOptions = SelectAction | DeselectAction;

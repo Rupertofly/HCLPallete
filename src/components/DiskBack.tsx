@@ -41,7 +41,7 @@ export const DiskBack = ({ c, l, count }: BackProps) => {
                 <rect x='-1' y='-1' width='2' height='2' fill='black' />
                 <path d={outerEdge} fill='white' />
             </mask>
-            <OutEdge d={outerEdge} light={l < 50} />
+            <OutEdge d={outerEdge} light={l <= 50} />
             <g mask={'url(#' + idKey.current + ')'}>
                 {d3.range(count).map((i) => (
                     <path

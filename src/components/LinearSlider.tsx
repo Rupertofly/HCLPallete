@@ -117,7 +117,7 @@ export const Slider = ({
                     />
                 </mask>
                 <OutBox
-                    light={l < 50}
+                    light={l <= 50}
                     strokeWidth='0'
                     x='0.2'
                     y='0.45'
@@ -126,7 +126,7 @@ export const Slider = ({
                     rx='0.30'
                 />
                 <OutBox
-                    light={!(l < 50)}
+                    light={!(l <= 50)}
                     strokeWidth='0'
                     x='0.25'
                     y='0.45'
@@ -143,13 +143,13 @@ export const Slider = ({
                     fill={color}
                     mask='url(#rectMask)'
                 />
-                <LM value={realVal} light={!(l < 50)} />
+                <LM value={realVal} light={!(l <= 50)} />
                 <Handle
                     x={0.75}
                     y={0.5 + (1 - val) * 4}
                     lineY={0.5 + (1 - (null == realVal ? val : realVal)) * 4}
                     fillC={color}
-                    light={l < 50}
+                    light={l <= 50}
                     drag={dragging}
                 />
             </svg>
@@ -158,16 +158,20 @@ export const Slider = ({
                 ref={inp}
                 defaultValue={(min + val * (max - min)).toFixed(1)}
                 onKeyDown={(e) => {
-                    if (/[0-9]|Backspace|Delete|Left|Right/.test(e.key)) {
+                    if (/[0-9]|Backspace|Delete|Left|Right|\./.test(e.key)) {
                         return true;
                     } else e.preventDefault();
                     if (/Enter/.test(e.key)) {
                         let n = Number.parseFloat(inp.current.value) ?? 0;
 
                         n = n < min ? min : n > max ? max : n;
-                        inp.current.value = n.toString();
+                        inp.current.value = n.toFixed(1);
                         output((n - min) / (max - min));
                     }
+                }}
+                onBlur={(e) => {
+                    inp.current.value = (min + val * (max - min)).toFixed(1);
+                    output(val);
                 }}
                 // onChange={(e) => {
                 //     let n = +inp.current.value || 1;
