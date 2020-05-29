@@ -19,6 +19,11 @@ export interface Col {
     h: number;
     c: number;
     l: number;
+    hex: string;
+    light: boolean;
+    rh: number;
+    rc: number;
+    rl: number;
 }
 export type JSONPallete = {
     shades: string[];
@@ -125,10 +130,7 @@ export interface ActionRequest<A extends ActionOptions> {
     type: A['type'];
     data: A['data'];
 }
-export type reducerFunction<A extends ActionOptions> = (
-    state: JSONPallete,
-    action: A
-) => JSONPallete;
+export type reducerFunction<A extends ActionOptions> = (state: JSONPallete, action: A) => JSONPallete;
 interface SelectAction {
     action: 'select';
     tile: [number, number];

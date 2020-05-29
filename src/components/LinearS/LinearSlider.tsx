@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import * as d3 from 'd3';
 import Handle from './LinearHandle';
-import * as t from '../types';
+import * as t from '../../types';
 import LM from './LinearMarker';
 import { createGlobalStyle } from 'styled-components';
 

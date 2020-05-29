@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import * as d3 from 'd3';
 import { BackProps, TAU } from './DiskSlider';
-import * as t from '../types';
+import * as t from '../../types';
 import styled from 'styled-components';
 
 const OutEdge = styled.path<{ light: boolean }>`

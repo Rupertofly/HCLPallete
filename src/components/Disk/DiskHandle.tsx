@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { UICOLOURS as UC } from '../types';
+import { UICOLOURS as UC } from '../../types';
+import * as T from 'types';
 const { PI, cos, sin } = Math;
 const QTR = PI / 2;
 const TAU = 2 * PI;

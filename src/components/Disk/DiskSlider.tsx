@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import * as t from '../types';
+import * as t from '../../types';
 import { hcl, svg } from 'd3';
 import { DiskBack } from './DiskBack';
 import DM from './DiskMarker';

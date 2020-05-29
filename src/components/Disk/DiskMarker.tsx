@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import styled from 'styled-components';
-import * as t from '../types';
+import * as t from '../../types';
 const { PI, cos, sin } = Math;
 const QTR = PI / 2;
 const TAU = 2 * PI;

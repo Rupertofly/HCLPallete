@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useReducer } from 'react';
-import DS from './components/DiskSlider';
-import LS from './components/LinearSlider';
+import DS from './components/Disk/DiskSlider';
+import LS from './components/LinearS/LinearSlider';
 import PI from './components/PickerInfo';
 import * as d3 from 'd3';
 import * as ntc from 'ntcjs';

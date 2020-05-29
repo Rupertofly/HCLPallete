@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import * as t from '../types';
+import * as t from '../../types';
 const MarkerLine = styled.path<{ light: boolean }>`
     stroke: ${(p) => (p.light ? t.UICOLOURS.LIGHT_COL : t.UICOLOURS.DARK_COL)};
     stroke-width: 0.07;

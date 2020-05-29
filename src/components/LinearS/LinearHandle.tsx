@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { UICOLOURS as UC } from '../types';
+import { UICOLOURS as UC } from '../../types';
 interface Props {
     fillC: string;
     light: boolean;
