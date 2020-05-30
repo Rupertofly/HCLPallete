@@ -1,7 +1,6 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, MutableRefObject } from 'react';
 import styled from 'styled-components';
 
-type downType = (e: SliderEventMouse | SliderEventTouch) => any;
 const CircFill = styled.circle`
     transform: scale(14);
     stroke: var(--border);
@@ -20,28 +19,26 @@ const CircBorder = styled.circle`
     }
 `;
 
-interface SliderEventCommon {
-    y: number;
-}
-interface SliderEventTouch extends SliderEventCommon {
-    touch: true;
-    touchIndex: number;
-}
-interface SliderEventMouse extends SliderEventCommon {
-    touch: false;
-}
 export interface SliderHandleProps {
-    onDown: downType;
+    onDown: (e: PointerEvent | React.PointerEvent<any>) => any;
+    onUp?: (e: PointerEvent | React.PointerEvent<any>) => any;
+    onMove?: (e: PointerEvent | React.PointerEvent<any>) => any;
     fill: string;
     instant: boolean;
     value: number;
+    boundingBox: MutableRefObject<SVGRectElement>;
 }
 
-export const SliderHandle = React.memo(function (props: SliderHandleProps): ReactElement {
+const SliderHandle = React.memo(function SliderHandle(props: SliderHandleProps): ReactElement {
     return (
-        <g style={{ transform: `translate(32px, ${252 - 244 * props.value}px)` }}>
+        <g
+            style={{
+                transform: `translate(32px, ${252 - 244 * props.value}px)`,
+                transition: !props.instant ? 'transform 233ms' : 'none',
+            }}>
             <CircFill
                 r='1'
+                onPointerDown={(e) => props.onDown(e)}
                 style={{
                     fill: props.fill,
                     transition: props.instant
@@ -53,3 +50,7 @@ export const SliderHandle = React.memo(function (props: SliderHandleProps): Reac
         </g>
     );
 });
+
+SliderHandle.displayName = 'SliderMarker';
+export { SliderHandle };
+export default SliderHandle;

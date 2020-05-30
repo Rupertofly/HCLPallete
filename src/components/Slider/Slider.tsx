@@ -1,9 +1,10 @@
-import React, { ReactElement, useRef } from 'react';
+import React, { ReactElement, useRef, useState } from 'react';
 import styled from 'styled-components';
 import * as T from '../../types';
 import { uniqueId } from 'lodash';
 import { SliderGradient } from './SliderGradient';
 import { SliderHandle } from './SliderHandle';
+import SliderMarker from './SliderMarker';
 export interface SliderProps extends T.Col {
     /**
      * Min value
@@ -51,9 +52,15 @@ export function Slider(props: SliderProps): ReactElement {
     const maskID = useRef(uniqueId('mask-'));
     const mask = `url(#${maskID.current})`;
     const borderCol = props.light ? T.UICOLOURS.DARK_COL : T.UICOLOURS.LIGHT_COL;
+    const backBounds = useRef<SVGRectElement>();
+    const inputRef = useRef<HTMLInputElement>();
+    const value = props[props.type];
+
+    if (inputRef.current) inputRef.current.value = value.toFixed(1);
     const svgStyles = {
         '--fill': props.hex,
         '--border': borderCol,
+        marginBottom: '0.8em',
     };
     let gradientValues = { p1: 0, p2: 0 };
 
@@ -68,9 +75,51 @@ export function Slider(props: SliderProps): ReactElement {
             gradientValues = { p1: props.h, p2: props.c };
             break;
     }
+    const [dragState, setDrag] = useState({ touched: false, startingPos: 0, startingVal: -1 });
+    const handleStart = (e: React.PointerEvent<any>) => {
+        if (dragState.touched) {
+            return;
+        }
+        e.preventDefault();
+        const bounds = backBounds.current.getBoundingClientRect();
+        const scale = 1 - (e.clientY - bounds.top) / (bounds.bottom - bounds.top);
+        const startY = scale > 0 ? (scale > 1 ? 1 : scale) : 0;
+
+        console.log(bounds, e.nativeEvent);
+        props.onStart(value);
+        setDrag((s) => ({ touched: true, startingPos: startY, startingVal: value }));
+    };
+    const handleMove = (e: React.PointerEvent<any>) => {
+        if (!dragState.touched) {
+            return;
+        }
+
+        e.preventDefault();
+        const bounds = backBounds.current.getBoundingClientRect();
+        const scale = 1 - (e.clientY - bounds.top) / (bounds.bottom - bounds.top);
+        const newY = scale > 0 ? (scale > 1 ? 1 : scale) : 0;
+
+        console.log(`from ${dragState.startingPos.toFixed(2)} to ${newY.toFixed(2)}`);
+        const offset = newY - dragState.startingPos;
+        const newValue = fromNormalised(
+            toNormalised(dragState.startingVal, props.min, props.max) + offset,
+            props.min,
+            props.max
+        );
+
+        props.onChange(newValue);
+    };
+    const handleEnd = (e: React.PointerEvent<any>) => {
+        e.preventDefault();
+        props.onEnd(value);
+        setDrag((s) => ({ touched: false, startingPos: 0, startingVal: -1 }));
+    };
 
     return (
-        <div style={{ width: '4em', height: '16em' }}>
+        <div
+            style={{ width: '4em', height: '16em', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+            onPointerMoveCapture={handleMove}
+            onPointerUpCapture={handleEnd}>
             <svg viewBox='0 0 64 256' style={svgStyles as any}>
                 <defs>
                     <SliderGradient
@@ -80,10 +129,11 @@ export function Slider(props: SliderProps): ReactElement {
                         type={props.type}
                         {...gradientValues}
                     />
+                    <mask id={maskID.current}>
+                        <rect x='4' y='4' width='56' height='248' rx='8' fill='white'></rect>
+                    </mask>
                 </defs>
-                <mask id={maskID.current}>
-                    <rect x='4' y='4' width='56' height='248' rx='8' fill='white'></rect>
-                </mask>
+
                 <rect
                     x='0'
                     y='0'
@@ -98,15 +148,62 @@ export function Slider(props: SliderProps): ReactElement {
                     width='56'
                     height='248'
                     mask={mask}
+                    ref={backBounds}
                     style={{ fill: `url('#${gradientID.current}')` }}
+                />
+                <SliderMarker
+                    key='Marker'
+                    value={toNormalised(props.r[props.type], props.min, props.max)}
+                    instant={props.instant}
+                    maskId={mask}
                 />
                 <SliderHandle
                     fill={props.hex}
                     instant={props.instant}
                     value={toNormalised(props[props.type], props.min, props.max)}
-                    onDown={() => console.log()}
+                    onDown={handleStart}
+                    boundingBox={backBounds}
                 />
             </svg>
+            <input
+                type='text'
+                ref={inputRef}
+                defaultValue={value.toFixed(1)}
+                onKeyDown={(e) => {
+                    if (/[0-9]|Backspace|Delete|Left|Right|\./.test(e.key)) {
+                        return true;
+                    } else e.preventDefault();
+                    if (/Enter/.test(e.key)) {
+                        let n = Number.parseFloat(inputRef.current.value) ?? 0;
+
+                        n = n < props.min ? props.min : n > props.max ? props.max : n;
+                        inputRef.current.value = n.toFixed(1);
+                        props.onChange(n);
+                    }
+                }}
+                onBlur={(e) => {
+                    inputRef.current.value = value.toFixed(1);
+                    props.onChange(value);
+                }}
+                // onChange={(e) => {
+                //     let n = +inp.current.value || 1;
+
+                //     n = n < min ? min : n > max ? max : n;
+                //     setVal((n - min) / (max - min));
+                // }}
+                style={{
+                    appearance: 'textarea',
+                    WebkitAppearance: 'none',
+                    padding: 0,
+                    margin: '0 auto',
+                    marginTop: '-0.5em',
+                    border: 0,
+                    width: '3em',
+                    fontFamily: 'Fira Code',
+                    color: ' #232323',
+                    textAlign: 'center',
+                }}
+            />
         </div>
     );
 }

@@ -21,9 +21,11 @@ export interface Col {
     l: number;
     hex: string;
     light: boolean;
-    rh: number;
-    rc: number;
-    rl: number;
+    r: {
+        h: number;
+        c: number;
+        l: number;
+    };
 }
 export type JSONPallete = {
     shades: string[];

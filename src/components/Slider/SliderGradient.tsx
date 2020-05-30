@@ -38,16 +38,14 @@ function tupleFromRange(
             return [p1, p2, fromNormalised(range, min, max)];
     }
 }
-export const SliderGradient = React.memo(
-    (props: SliderGradientProps): ReactElement => {
-        return (
-            <linearGradient id={props.id} x1='0' x2='0' y1='1' y2='0'>
-                {d3.range(7).map((v) => {
-                    const col = d3.hcl(...tupleFromRange(props.type, v / 6, props.p1, props.p2, props.min, props.max));
+export const SliderGradient = React.memo(function SliderGradient(props: SliderGradientProps) {
+    return (
+        <linearGradient id={props.id} x1='0' x2='0' y1='1' y2='0'>
+            {d3.range(7).map((v) => {
+                const col = d3.hcl(...tupleFromRange(props.type, v / 6, props.p1, props.p2, props.min, props.max));
 
-                    return <stop offset={`${((v / 6) * 100).toFixed(1)}%`} stop-color={col.hex()} />;
-                })}
-            </linearGradient>
-        );
-    }
-);
+                return <stop offset={`${((v / 6) * 100).toFixed(1)}%`} stopColor={col.hex()} key={v} />;
+            })}
+        </linearGradient>
+    );
+});
