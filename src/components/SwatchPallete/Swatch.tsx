@@ -6,7 +6,7 @@ const SButton = styled.button`
     height: 4em;
     width: 4em;
     font-size: inherit;
-    padding: 0;
+    margin: 0.2em;
     border-width: 0.25em;
     border-style: solid;
     border-color: var(--border);
@@ -18,6 +18,9 @@ const SButton = styled.button`
 
     &:hover {
         transform: scale(1.125);
+    }
+    &:focus {
+        outline: none;
     }
 `;
 

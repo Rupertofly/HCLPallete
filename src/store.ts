@@ -65,10 +65,11 @@ function calculateColour(a: string | number, b?: number, cc?: number) {
     };
 }
 function getMeanHue(h: number, cols: Col[][]): number {
-    return circularMean(cols[h].map((cl) => cl.h)) }
+    return circularMean(cols[h].map((cl) => cl.h));
 }
+
 function getMeanShade(s: number, cols: Col[][]): number {
-    return d3.mean(cols.map((h) => h[s].l)),
+    return d3.mean(cols.map((h) => h[s].l));
 }
 function updateColor(state: State, h: number, s: number, newCol: Col) {
     return {
@@ -85,7 +86,7 @@ function setValue(state: State, data: SetValActionRequest['data']) {
 
     updatedColor[data.prop] = data.value;
 
-    return updateColor(state, data.hue, data.shade, updatedColor);
+    return updateColor(state, data.hue, data.shade, calculateColour(updatedColor.h, updatedColor.c, updatedColor.l));
 }
 
 // Layers
@@ -216,7 +217,7 @@ function savePallete(state: State, data: SavePalleteActionRequest['data']): Stat
     return state;
 }
 
-function importPallete(state: State, data: ImportPalleteActionRequest['data']): State {
+export function importPallete(state: State, data: ImportPalleteActionRequest['data']): State {
     const palleteData: JSONPallete = JSON.parse(data.dataString);
     const newState: State = {
         colours: palleteData.colours.map((hue, hi) => {
@@ -234,7 +235,8 @@ function importPallete(state: State, data: ImportPalleteActionRequest['data']): 
             };
         }),
     };
-    return newState
+
+    return newState;
 }
 
 function rebuildPallete(state: State): State {
@@ -252,7 +254,7 @@ function calculateHue(state: State, data: CalculateHueActionRequest['data']): St
     return {
         ...state,
         hues: state.hues.map((hue, i) => {
-            return i === data.hueIndex ? {...hue,avgHue:getMeanHue(i,state.colours)} : hue
+            return i === data.hueIndex ? { ...hue, avgHue: getMeanHue(i, state.colours) } : hue;
         }),
     };
 }
@@ -260,7 +262,9 @@ function calculateShade(state: State, data: CalculateShadeActionRequest['data'])
     return {
         ...state,
         shades: state.shades.map((shades, i) => {
-            return i === data.shadeIndex ? {...shades,avgShade:getMeanShade(i,state.colours)} as ShadeInfo: shades
+            return i === data.shadeIndex
+                ? ({ ...shades, avgShade: getMeanShade(i, state.colours) } as ShadeInfo)
+                : shades;
         }),
     };
 }
@@ -288,7 +292,7 @@ export function palleteReducer(state: State, action: ActionOptions): State {
         case ACTION_TYPES.CALCULATE_SHADE:
             return calculateShade(state, action.data);
         case ACTION_TYPES.CALCULATE_HUE:
-            return calculateHue(state,action.data)
+            return calculateHue(state, action.data);
         default:
             return state;
     }
