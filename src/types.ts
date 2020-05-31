@@ -27,11 +27,29 @@ export interface Col {
         l: number;
     };
 }
-export type JSONPallete = {
+export interface HueInfo {
+    name: string;
+    avgHue: number;
+}
+export interface ShadeInfo {
+    name: string;
+    avgValue: number;
+}
+export interface State {
+    shades: ShadeInfo[];
+    hues: HueInfo[];
+    colours: Col[][];
+}
+export interface JSONPallete {
     shades: string[];
     hues: string[];
-    colours: Col[][];
-};
+    colours: JSONCol[][];
+}
+interface JSONCol {
+    h: number;
+    c: number;
+    l: number;
+}
 // module 'ntcjs' {
 //     const content: any;
 //     export default content;
@@ -51,6 +69,8 @@ export enum ACTION_TYPES {
     SAVE_PALLETE = 'savePallete',
     IMPORT_PALLETE = 'importPallete',
     REBUILD = 'rebuild',
+    CALCULATE_HUE = 'calculateHue',
+    CALCULATE_SHADE = 'calculateShade',
 }
 export interface ActionBaseRequest {
     type: ACTION_TYPES;
@@ -118,6 +138,18 @@ export interface RebuildPalleteActionRequest {
     type: ACTION_TYPES.REBUILD;
     data: {};
 }
+export interface CalculateHueActionRequest {
+    type: ACTION_TYPES.CALCULATE_HUE;
+    data: {
+        hueIndex: number;
+    };
+}
+export interface CalculateShadeActionRequest {
+    type: ACTION_TYPES.CALCULATE_SHADE;
+    data: {
+        shadeIndex: number;
+    };
+}
 export type ActionOptions =
     | SetColorActionRequest
     | SetValActionRequest
@@ -127,12 +159,14 @@ export type ActionOptions =
     | LoadPalleteActionRequest
     | SavePalleteActionRequest
     | ImportPalleteActionRequest
-    | RebuildPalleteActionRequest;
+    | RebuildPalleteActionRequest
+    | CalculateHueActionRequest
+    | CalculateShadeActionRequest;
 export interface ActionRequest<A extends ActionOptions> {
     type: A['type'];
     data: A['data'];
 }
-export type reducerFunction<A extends ActionOptions> = (state: JSONPallete, action: A) => JSONPallete;
+export type reducerFunction<A extends ActionOptions> = (state: State, action: A) => State;
 interface SelectAction {
     action: 'select';
     tile: [number, number];

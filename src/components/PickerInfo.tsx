@@ -36,9 +36,7 @@ export function PickerInfo({
                     backgroundColor: fill.toString(),
                     backgroundClip: 'content-box',
                     borderRadius: '1em',
-                    border: `0.2em solid ${
-                        fill.l <= 50 ? '#f0f0f0' : '#373737'
-                    }`,
+                    border: `0.2em solid ${fill.l <= 50 ? '#f0f0f0' : '#373737'}`,
                     transition: 'border 0.15s',
                 }}></div>
             <div
@@ -49,11 +47,7 @@ export function PickerInfo({
                     display: 'flex',
                     flexDirection: 'column',
                 }}>
-                {fill.displayable() ? (
-                    <span>{fill.hex()}</span>
-                ) : (
-                    <i>{fill.hex()}</i>
-                )}
+                {fill.displayable() ? <span>{fill.hex()}</span> : <i>{fill.hex()}</i>}
                 <span>{ntc.name(fill.hex())[1]}</span>
             </div>
         </Container>

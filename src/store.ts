@@ -1,5 +1,5 @@
 import {
-    JSONPallete,
+    State,
     ActionRequest,
     reducerFunction,
     ActionBaseRequest,
@@ -16,28 +16,71 @@ import {
     RebuildPalleteActionRequest,
     ImportPalleteActionRequest,
     SelectionOptions,
+    HueInfo,
+    JSONPallete,
+    CalculateHueActionRequest,
+    CalculateShadeActionRequest,
+    ShadeInfo,
 } from './types';
 import { Reducer } from 'react';
 import * as d3 from 'd3';
 import { hcl } from 'd3';
+const TAU = Math.PI * 2;
+const fromDeg = (n) => n * (TAU / 360);
+const toDeg = (n) => n * (360 / TAU);
+
+function circularMean(angles: number[]) {
+    const mSin = d3.mean(angles.map((a) => Math.sin(fromDeg(a))));
+    const mCos = d3.mean(angles.map((a) => Math.cos(fromDeg(a))));
+
+    return toDeg(Math.atan(mSin / mCos));
+}
 
 // Change Color
+function calculateColour(col: string): Col;
+function calculateColour(h: number, c: number, l: number): Col;
+function calculateColour(a: string | number, b?: number, cc?: number) {
+    let color: d3.HCLColor;
 
-function updateColor(state: JSONPallete, h: number, s: number, newCol: Col) {
+    if (typeof a === 'string') {
+        color = hcl(a);
+    } else {
+        color = hcl(a, b, cc);
+    }
+    const hex = color.hex();
+    const { h, c, l } = color;
+    const realCol = hcl(hex);
+
+    return {
+        h,
+        c,
+        l,
+        hex,
+        light: l > 50,
+        r: {
+            h: realCol.h,
+            c: realCol.c,
+            l: realCol.l,
+        },
+    };
+}
+function getMeanHue(h: number, cols: Col[][]): number {
+    return circularMean(cols[h].map((cl) => cl.h)) }
+}
+function getMeanShade(s: number, cols: Col[][]): number {
+    return d3.mean(cols.map((h) => h[s].l)),
+}
+function updateColor(state: State, h: number, s: number, newCol: Col) {
     return {
         ...state,
-        colours: state.colours.map((hs, i) =>
-            i === h ? hs.map((ss, i) => (i === s ? newCol : ss)) : hs
-        ),
-    } as JSONPallete;
+        colours: state.colours.map((hs, i) => (i === h ? hs.map((ss, i) => (i === s ? newCol : ss)) : hs)),
+    } as State;
 }
-function setColor(state: JSONPallete, data: SetColorActionRequest['data']) {
-    const { h, c, l } = hcl(data.color);
-
-    return updateColor(state, data.hue, data.shade, { h, c, l });
+function setColor(state: State, data: SetColorActionRequest['data']) {
+    return updateColor(state, data.hue, data.shade, calculateColour(data.color));
 }
 
-function setValue(state: JSONPallete, data: SetValActionRequest['data']) {
+function setValue(state: State, data: SetValActionRequest['data']) {
     const updatedColor: Col = { ...state.colours[data.hue][data.shade] };
 
     updatedColor[data.prop] = data.value;
@@ -49,7 +92,7 @@ function setValue(state: JSONPallete, data: SetValActionRequest['data']) {
 function degDist(a: number, b: number) {
     return Math.abs(b - a) < 180 ? Math.abs(b - a) : 360 - Math.abs(b - a);
 }
-function addHueLayer(state: JSONPallete, name: string): JSONPallete {
+function addHueLayer(state: State, name: string): State {
     const newHue = state.colours
         .map((hs) => d3.mean(hs.map((c) => c.h)))
         .sort()
@@ -79,31 +122,29 @@ function addHueLayer(state: JSONPallete, name: string): JSONPallete {
 
     return {
         shades: state.shades,
-        hues: [...state.hues, name],
+        hues: [...state.hues, { name, avgHue: newHue }],
         colours: [
             ...state.colours,
-            d3.range(state.shades.length).map((si) => ({
-                h: newHue,
-                c: d3.mean(state.colours.map((hue) => hue[si].c)),
-                l: d3.mean(state.colours.map((hue) => hue[si].l)),
-            })),
+            d3
+                .range(state.shades.length)
+                .map((si) =>
+                    calculateColour(
+                        newHue,
+                        d3.mean(state.colours.map((hue) => hue[si].c)),
+                        d3.mean(state.colours.map((hue) => hue[si].l))
+                    )
+                ),
         ],
     };
 }
-function addShadeLayer(state: JSONPallete, name: string): JSONPallete {
+function addShadeLayer(state: State, name: string): State {
     return {
         hues: state.hues,
-        shades: [...state.shades, name],
-        colours: state.colours.map((hue) => [
-            ...hue,
-            { h: d3.mean(hue.map((c) => c.h)), c: 45, l: 45 },
-        ]),
+        shades: [...state.shades, { name, avgValue: 45 }],
+        colours: state.colours.map((hue) => [...hue, calculateColour(d3.mean(hue.map((c) => c.h)), 45, 45)]),
     };
 }
-function addLayer(
-    state: JSONPallete,
-    data: AddLayerActionRequest['data']
-): JSONPallete {
+function addLayer(state: State, data: AddLayerActionRequest['data']): State {
     if (data.name.length < 1) return state;
     switch (data.layerType) {
         case 'hue':
@@ -115,10 +156,7 @@ function addLayer(
     }
 }
 
-function removeLayer(
-    state: JSONPallete,
-    data: RemoveLayerActionRequest['data']
-): JSONPallete {
+function removeLayer(state: State, data: RemoveLayerActionRequest['data']): State {
     const ix = data.index;
 
     switch (data.layerType) {
@@ -132,19 +170,14 @@ function removeLayer(
             return {
                 hues: state.hues,
                 shades: state.shades.filter((v, i) => i !== ix),
-                colours: state.colours.map((hues) =>
-                    hues.filter((v, i) => i !== ix)
-                ),
+                colours: state.colours.map((hues) => hues.filter((v, i) => i !== ix)),
             };
         default:
             return state;
     }
 }
 
-function renameLayer(
-    state: JSONPallete,
-    data: RenameActionRequest['data']
-): JSONPallete {
+function renameLayer(state: State, data: RenameActionRequest['data']): State {
     const ix = data.index;
     const nm = data.name;
 
@@ -152,12 +185,12 @@ function renameLayer(
         case 'hue':
             return {
                 ...state,
-                hues: state.hues.map((v, i) => (i === ix ? nm : v)),
+                hues: state.hues.map((v, i) => (i === ix ? { name: nm, avgHue: v.avgHue } : v)),
             };
         case 'shade':
             return {
                 ...state,
-                shades: state.shades.map((v, i) => (i === ix ? nm : v)),
+                shades: state.shades.map((v, i) => (i === ix ? { name: nm, avgValue: v.avgValue } : v)),
             };
         default:
             return state;
@@ -166,21 +199,15 @@ function renameLayer(
 
 // SaveStates and Export
 
-function loadPallete(
-    state: JSONPallete,
-    data: LoadPalleteActionRequest['data']
-): JSONPallete {
+function loadPallete(state: State, data: LoadPalleteActionRequest['data']): State {
     const nm = data.name;
     const dataString = localStorage.getItem(nm);
-    const newPallete: JSONPallete = JSON.parse(dataString);
+    const newPallete: State = JSON.parse(dataString);
 
     return { ...newPallete };
 }
 
-function savePallete(
-    state: JSONPallete,
-    data: SavePalleteActionRequest['data']
-): JSONPallete {
+function savePallete(state: State, data: SavePalleteActionRequest['data']): State {
     const nm = data.name;
     const dataString = JSON.stringify(state);
 
@@ -189,31 +216,56 @@ function savePallete(
     return state;
 }
 
-function importPallete(
-    state: JSONPallete,
-    data: ImportPalleteActionRequest['data']
-): JSONPallete {
-    return JSON.parse(data.dataString);
+function importPallete(state: State, data: ImportPalleteActionRequest['data']): State {
+    const palleteData: JSONPallete = JSON.parse(data.dataString);
+    const newState: State = {
+        colours: palleteData.colours.map((hue, hi) => {
+            return hue.map((col) => {
+                return calculateColour(col.h, col.c, col.l);
+            });
+        }),
+        hues: palleteData.hues.map((nm, i) => {
+            return { name: nm, avgHue: circularMean(palleteData.colours[i].map((cl) => cl.h)) };
+        }),
+        shades: palleteData.shades.map((nm, i) => {
+            return {
+                name: nm,
+                avgValue: d3.mean(palleteData.colours.map((h) => h[i].l)),
+            };
+        }),
+    };
+    return newState
 }
 
-function rebuildPallete(state: JSONPallete): JSONPallete {
+function rebuildPallete(state: State): State {
     return {
         ...state,
         colours: state.colours.map((hs) =>
-            hs.map(({ h, c, l }) => {
-                const hex = d3.hcl(h, c, l).hex();
-                const nc = d3.hcl(hex);
-
-                return { h: nc.h, c: nc.c, l: nc.l };
+            hs.map((col) => {
+                return calculateColour(col.hex);
             })
         ),
     };
 }
 
-export function palleteReducer(
-    state: JSONPallete,
-    action: ActionOptions
-): JSONPallete {
+function calculateHue(state: State, data: CalculateHueActionRequest['data']): State {
+    return {
+        ...state,
+        hues: state.hues.map((hue, i) => {
+            return i === data.hueIndex ? {...hue,avgHue:getMeanHue(i,state.colours)} : hue
+        }),
+    };
+}
+function calculateShade(state: State, data: CalculateShadeActionRequest['data']): State {
+    return {
+        ...state,
+        shades: state.shades.map((shades, i) => {
+            return i === data.shadeIndex ? {...shades,avgShade:getMeanShade(i,state.colours)} as ShadeInfo: shades
+        }),
+    };
+}
+
+export function palleteReducer(state: State, action: ActionOptions): State {
     switch (action.type) {
         case ACTION_TYPES.SET_COLOR:
             return setColor(state, action.data);
@@ -233,15 +285,16 @@ export function palleteReducer(
             return importPallete(state, action.data);
         case ACTION_TYPES.REBUILD:
             return rebuildPallete(state);
+        case ACTION_TYPES.CALCULATE_SHADE:
+            return calculateShade(state, action.data);
+        case ACTION_TYPES.CALCULATE_HUE:
+            return calculateHue(state,action.data)
         default:
             return state;
     }
 }
 
-export function selectionReducer(
-    selected: [number, number],
-    action: SelectionOptions
-): [number, number] {
+export function selectionReducer(selected: [number, number], action: SelectionOptions): [number, number] {
     switch (action.action) {
         case 'select':
             return action.tile;

@@ -2,9 +2,12 @@ import React, { ReactElement } from 'react';
 import * as T from '../../types';
 import * as d3 from 'd3';
 import styled from 'styled-components';
+
+const DETAIL = 12;
+
 export interface SliderGradientProps {
-    p1: number;
-    p2: number;
+    firstProp: number;
+    secondProp: number;
     min: number;
     max: number;
     type: T.HCLProp;
@@ -41,10 +44,12 @@ function tupleFromRange(
 export const SliderGradient = React.memo(function SliderGradient(props: SliderGradientProps) {
     return (
         <linearGradient id={props.id} x1='0' x2='0' y1='1' y2='0'>
-            {d3.range(7).map((v) => {
-                const col = d3.hcl(...tupleFromRange(props.type, v / 6, props.p1, props.p2, props.min, props.max));
+            {d3.range(DETAIL + 1).map((v) => {
+                const col = d3.hcl(
+                    ...tupleFromRange(props.type, v / DETAIL, props.firstProp, props.secondProp, props.min, props.max)
+                );
 
-                return <stop offset={`${((v / 6) * 100).toFixed(1)}%`} stopColor={col.hex()} key={v} />;
+                return <stop offset={`${((v / DETAIL) * 100).toFixed(1)}%`} stopColor={col.hex()} key={v} />;
             })}
         </linearGradient>
     );

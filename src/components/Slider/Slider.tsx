@@ -51,28 +51,34 @@ export function Slider(props: SliderProps): ReactElement {
     const gradientID = useRef(uniqueId('grad-'));
     const maskID = useRef(uniqueId('mask-'));
     const mask = `url(#${maskID.current})`;
-    const borderCol = props.light ? T.UICOLOURS.DARK_COL : T.UICOLOURS.LIGHT_COL;
-    const backBounds = useRef<SVGRectElement>();
-    const inputRef = useRef<HTMLInputElement>();
-    const value = props[props.type];
 
-    if (inputRef.current) inputRef.current.value = value.toFixed(1);
+    const borderCol = props.light ? T.UICOLOURS.DARK_COL : T.UICOLOURS.LIGHT_COL;
+
+    const inputSpaceRef = useRef<SVGRectElement>();
+    const TextInputRef = useRef<HTMLInputElement>();
+
+    const value = props[props.type];
     const svgStyles = {
         '--fill': props.hex,
         '--border': borderCol,
         marginBottom: '0.8em',
     };
-    let gradientValues = { p1: 0, p2: 0 };
+
+    // Setting up input info
+    if (TextInputRef.current) TextInputRef.current.value = value.toFixed(1);
+
+    // Handling Gradient Values
+    let gradientValues = { firstProp: 0, secondProp: 0 };
 
     switch (props.type) {
         case 'h':
-            gradientValues = { p1: props.c, p2: props.l };
+            gradientValues = { firstProp: props.c, secondProp: props.l };
             break;
         case 'c':
-            gradientValues = { p1: props.l, p2: props.h };
+            gradientValues = { firstProp: props.l, secondProp: props.h };
             break;
         case 'l':
-            gradientValues = { p1: props.h, p2: props.c };
+            gradientValues = { firstProp: props.h, secondProp: props.c };
             break;
     }
     const [dragState, setDrag] = useState({ touched: false, startingPos: 0, startingVal: -1 });
@@ -81,13 +87,12 @@ export function Slider(props: SliderProps): ReactElement {
             return;
         }
         e.preventDefault();
-        const bounds = backBounds.current.getBoundingClientRect();
-        const scale = 1 - (e.clientY - bounds.top) / (bounds.bottom - bounds.top);
-        const startY = scale > 0 ? (scale > 1 ? 1 : scale) : 0;
+        const inputBounds = inputSpaceRef.current.getBoundingClientRect();
+        const scaledPosition = 1 - (e.clientY - inputBounds.top) / (inputBounds.bottom - inputBounds.top);
+        const DragStartPosition = scaledPosition > 0 ? (scaledPosition > 1 ? 1 : scaledPosition) : 0;
 
-        console.log(bounds, e.nativeEvent);
         props.onStart(value);
-        setDrag((s) => ({ touched: true, startingPos: startY, startingVal: value }));
+        setDrag((s) => ({ touched: true, startingPos: DragStartPosition, startingVal: value }));
     };
     const handleMove = (e: React.PointerEvent<any>) => {
         if (!dragState.touched) {
@@ -95,14 +100,13 @@ export function Slider(props: SliderProps): ReactElement {
         }
 
         e.preventDefault();
-        const bounds = backBounds.current.getBoundingClientRect();
-        const scale = 1 - (e.clientY - bounds.top) / (bounds.bottom - bounds.top);
-        const newY = scale > 0 ? (scale > 1 ? 1 : scale) : 0;
+        const inputBounds = inputSpaceRef.current.getBoundingClientRect();
+        const scaledPosition = 1 - (e.clientY - inputBounds.top) / (inputBounds.bottom - inputBounds.top);
+        const constrainedPosition = scaledPosition > 0 ? (scaledPosition > 1 ? 1 : scaledPosition) : 0;
 
-        console.log(`from ${dragState.startingPos.toFixed(2)} to ${newY.toFixed(2)}`);
-        const offset = newY - dragState.startingPos;
+        const currentOffset = constrainedPosition - dragState.startingPos;
         const newValue = fromNormalised(
-            toNormalised(dragState.startingVal, props.min, props.max) + offset,
+            toNormalised(dragState.startingVal, props.min, props.max) + currentOffset,
             props.min,
             props.max
         );
@@ -148,7 +152,7 @@ export function Slider(props: SliderProps): ReactElement {
                     width='56'
                     height='248'
                     mask={mask}
-                    ref={backBounds}
+                    ref={inputSpaceRef}
                     style={{ fill: `url('#${gradientID.current}')` }}
                 />
                 <SliderMarker
@@ -162,27 +166,27 @@ export function Slider(props: SliderProps): ReactElement {
                     instant={props.instant}
                     value={toNormalised(props[props.type], props.min, props.max)}
                     onDown={handleStart}
-                    boundingBox={backBounds}
+                    boundingBox={inputSpaceRef}
                 />
             </svg>
             <input
                 type='text'
-                ref={inputRef}
+                ref={TextInputRef}
                 defaultValue={value.toFixed(1)}
                 onKeyDown={(e) => {
                     if (/[0-9]|Backspace|Delete|Left|Right|\./.test(e.key)) {
                         return true;
                     } else e.preventDefault();
                     if (/Enter/.test(e.key)) {
-                        let n = Number.parseFloat(inputRef.current.value) ?? 0;
+                        let n = Number.parseFloat(TextInputRef.current.value) ?? 0;
 
                         n = n < props.min ? props.min : n > props.max ? props.max : n;
-                        inputRef.current.value = n.toFixed(1);
+                        TextInputRef.current.value = n.toFixed(1);
                         props.onChange(n);
                     }
                 }}
                 onBlur={(e) => {
-                    inputRef.current.value = value.toFixed(1);
+                    TextInputRef.current.value = value.toFixed(1);
                     props.onChange(value);
                 }}
                 // onChange={(e) => {

@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 import * as knobs from '@storybook/addon-knobs';
 export default { title: 'slider', decorators: [knobs.withKnobs] };
 import * as T from '../src/types';
+import Swatch from '../src/components/PickerInfo';
 export function sliderStory(): ReactElement {
     const lightness = knobs.number('lightness', 60, { min: 0, max: 100, range: true });
     const hue = knobs.number('hue', 60, { min: 0, max: 360, range: true });
@@ -72,6 +73,7 @@ export function sliderStory(): ReactElement {
                     setDrag(false);
                 }}
             />
+            <Swatch color={color} output={(f) => f} />
         </div>
     );
 }
