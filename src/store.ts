@@ -90,7 +90,7 @@ function circularMean(angles: number[]) {
   const mCos = d3.mean(angles.map((a) => Math.cos(fromDeg(a))));
   const newAngle = Math.atan(mSin / mCos);
 
-  return toDeg(newAngle < 0 ? TAU + newAngle : newAngle);
+  return toDeg((TAU + newAngle) % TAU);
 }
 
 // Change Color

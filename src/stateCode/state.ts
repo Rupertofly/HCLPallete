@@ -355,4 +355,3 @@ export const defaultState = {
   ] as Colour[][],
 };
 export type State = typeof defaultState;
-console.log(JSON.stringify(defaultState));
