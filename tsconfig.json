@@ -1,21 +1,21 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "outDir": "./",
-        "rootDir": "src",
-        "target": "ES2018",
-        "jsx": "react",
-        "importHelpers": true,
-        "moduleResolution": "node",
-        "esModuleInterop": true,
-        "sourceMap": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "lib": ["ESNext", "ES2019", "DOM"],
-        "allowSyntheticDefaultImports": true,
-        "resolveJsonModule": true
-    },
-    "typeAcquisition": { "enable": true },
-    "exclude": ["node_modules", "test"],
-    "include": ["src/**/*.ts"]
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "dist",
+    "rootDir": "src",
+    "target": "ES2018",
+    "jsx": "react",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": ["ESNext", "ES2019", "DOM"],
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true
+  },
+  "typeAcquisition": { "enable": true },
+  "exclude": ["node_modules", "test"],
+  "include": ["src/**/*.ts"]
 }
