@@ -216,3 +216,17 @@ export function handleRearrangeLayer(oldState: State, { options }: Actions.Actio
       return oldState;
   }
 }
+
+export function handleRenameLayer(oldState: State, { options }: Actions.ActionRenameLayer['action']): State {
+  switch (options.type) {
+    case 'hue':
+      return { ...oldState, hues: replaceAt(oldState.hues, options.index, (h) => ({ ...h, name: options.newName })) };
+    case 'shade':
+      return {
+        ...oldState,
+        shades: replaceAt(oldState.shades, options.index, (h) => ({ ...h, name: options.newName })),
+      };
+    default:
+      return oldState;
+  }
+}
