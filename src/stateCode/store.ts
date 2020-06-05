@@ -18,15 +18,19 @@ function replaceAt<T>(array: T[], index: number, iteree: (value: T, i: number, a
 }
 function nDimensionalReplaceAt<T, U extends nDimensionalArray<T>>(
   source: U,
-  indexes: number[],
+  indexes: (number | '_')[],
   iterator: iteratorFunc<T>
 ): U {
-  const recurse = (s: any, depth: number) => {
+  const recurse = (s: U, depth: number) => {
     if (s.constructor !== Array) return s;
     if (depth >= indexes.length - 1) {
-      return replaceAt(s, indexes[depth], iterator);
+      return indexes[depth] === '_'
+        ? s.map((v, i) => iterator(v as T, i, s))
+        : replaceAt(s, indexes[depth] as number, iterator);
     } else {
-      return replaceAt(s, indexes[depth], (arr) => recurse(arr, depth + 1));
+      return indexes[depth] === '_'
+        ? s.map((v, i) => recurse(v as U, depth + 1))
+        : replaceAt(s, indexes[depth] as number, (arr) => recurse(arr as U, depth + 1));
     }
   };
 
