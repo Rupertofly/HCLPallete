@@ -2,7 +2,8 @@ import * as A from './actions';
 import * as Store from './store';
 import { State } from './state';
 import store from '../store';
-import TAP = A.GLOBAL_ACTION_TYPES;
+const TAP = A.GLOBAL_ACTION_TYPES;
+
 function colourReducer(state: State, { action }: A.ColourActions): State {
   switch (action.type) {
     case 'setColor':

@@ -4,10 +4,10 @@ import * as S from '../../stateCode';
 import styled from 'styled-components';
 import { hcl } from 'd3';
 const SButton = styled.button`
-  height: 4em;
-  width: 4em;
+  height: 5em;
+  width: 5em;
   font-size: inherit;
-  margin: 0.2em;
+  margin: 0.15em;
   border-width: 0.25em;
   border-style: solid;
   border-color: var(--border);
@@ -30,9 +30,11 @@ interface Props {
   color: S.Colour;
   selected: boolean;
   selector: (toSelect: [number, number]) => any;
+  details: boolean;
+  selectedColor?: string;
 }
 
-export function Swatch({ color, selected, location, selector }: Props): ReactElement {
+export function Swatch({ color, selected, selectedColor, location, details, selector }: Props): ReactElement {
   const svgProps = {
     viewbox: '0 0 1 1',
   };
@@ -52,8 +54,20 @@ export function Swatch({ color, selected, location, selector }: Props): ReactEle
       onClick={() => {
         if (selected) selector([-1, -1]);
         else selector(location);
-      }}
-    />
+      }}>
+      {details ? (
+        <span
+          style={{
+            position: 'absolute',
+            left: '0.5em',
+            top: '0.1em',
+            fontSize: '0.6em',
+            color: selectedColor ?? 'white',
+          }}>
+          cool
+        </span>
+      ) : null}
+    </SButton>
   );
 }
 export default Swatch;

@@ -12,30 +12,21 @@ interface Props {
 }
 // Comment
 export function Pallete({ st, select, selected, dispatch }: Props) {
+  const selectedHex: string | undefined =
+    selected[0] < 0 || selected[1] < 0 ? undefined : st.colours[selected[0]][selected[1]].hex;
+  const detBox = React.useRef<HTMLInputElement>();
+  const [details, setDetails] = React.useState(!!detBox.current?.checked);
+
   return (
     <table style={{ borderSpacing: 0, fontFamily: 'fira code' }}>
       <tbody>
         <tr>
-          <th />
+          <td style={{ fontSize: '0.8em' }}>
+            <input ref={detBox} type='checkbox' name='details' onChange={(e) => setDetails(e.currentTarget.checked)} />
+            Details
+          </td>
           {st.shades.map((sh, i) => {
-            return (
-              <th
-                style={{
-                  backgroundColor: i === selected[1] ? '#e0e0e0ff' : '#fefefe00',
-
-                  transition: 'background-color 233ms',
-                }}
-                key={i}>
-                {' '}
-                <input
-                  type='textarea'
-                  name='shades'
-                  value={sh.name}
-                  size={6}
-                  style={{ border: 0, fontFamily: 'fira code', background: '0' }}
-                />
-              </th>
-            );
+            return <PH info={st.shades[i]} index={i} len={st.shades.length} dispatch={dispatch} key={i} />;
           })}
         </tr>
         {st.colours.map((hue, hueIndex) => {
@@ -44,24 +35,30 @@ export function Pallete({ st, select, selected, dispatch }: Props) {
               <PH
                 info={st.hues[hueIndex]}
                 index={hueIndex}
+                len={st.hues.length}
                 dispatch={dispatch}
                 style={{
                   backgroundColor: hueIndex === selected[0] ? '#e0e0e0ff' : '#fefefe00',
 
                   transition: 'background-color 233ms',
-                }}></PH>
+                }}
+              />
               {hue.map((col, shadeIndex) => {
                 return (
                   <td
+                    key={shadeIndex}
                     style={{
                       backgroundColor:
                         hueIndex === selected[0] || shadeIndex === selected[1] ? '#e0e0e0ff' : '#fefefe00',
 
                       transition: 'background-color 233ms',
+                      textAlign: 'center',
                     }}>
                     <Swatch
                       key={shadeIndex}
                       color={col}
+                      details={details}
+                      selectedColor={selectedHex}
                       location={[hueIndex, shadeIndex]}
                       selected={hueIndex === selected[0] && shadeIndex === selected[1]}
                       selector={select}
