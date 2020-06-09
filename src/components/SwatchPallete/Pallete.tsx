@@ -3,7 +3,35 @@ import * as T from '../../types';
 import * as S from '../../stateCode';
 import * as ED from 'riek';
 import Swatch from './Swatch';
+import styled from 'styled-components';
 import PH from './PalleteHeader';
+const HB = styled.button`
+  border: 0;
+  font-size: 1.2em;
+  transform-origin: 50% 50%;
+  transform: scale(1);
+  background: 0;
+  cursor: pointer;
+  width: fit-content;
+  justify-self: end;
+  padding: 0.05em 0.2em;
+  margin-right: 0.2em;
+  margin-top: 0.2em;
+  font-weight: 400;
+  border-radius: 25%;
+  transition: transform 233ms, background-color 64ms;
+  background-color: white;
+  &:hover {
+    font-weight: 800;
+  }
+  &:active {
+    background-color: lightgray;
+  }
+  &:focus {
+    outline: none;
+  }
+`;
+
 interface Props {
   st: S.State;
   selected: [number, number];
@@ -17,6 +45,8 @@ export function Pallete({ st, select, selected, dispatch }: Props) {
   const detBox = React.useRef<HTMLInputElement>();
   const [details, setDetails] = React.useState(!!detBox.current?.checked);
 
+  React.useEffect(() => select([-1, -1]), []);
+
   return (
     <table style={{ borderSpacing: 0, fontFamily: 'fira code' }}>
       <tbody>
@@ -28,6 +58,15 @@ export function Pallete({ st, select, selected, dispatch }: Props) {
           {st.shades.map((sh, i) => {
             return <PH info={st.shades[i]} index={i} len={st.shades.length} dispatch={dispatch} key={i} />;
           })}
+          <td>
+            <HB
+              onClick={(e) => {
+                dispatch(S.addLayer('shade'));
+              }}
+              style={{ verticalAlign: 'middle', fontSize: '1.5em' }}>
+              +
+            </HB>
+          </td>
         </tr>
         {st.colours.map((hue, hueIndex) => {
           return (

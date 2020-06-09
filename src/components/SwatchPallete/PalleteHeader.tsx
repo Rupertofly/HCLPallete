@@ -24,6 +24,7 @@ const HB = styled.button`
   transform-origin: 50% 50%;
   transform: scale(1);
   background: 0;
+  cursor: pointer;
   width: fit-content;
   justify-self: end;
   padding: 0.05em 0.2em;
@@ -60,10 +61,10 @@ export interface PalleteHeaderProps<T extends HeadingInfo> extends React.HTMLAtt
 const HueArea = styled.textarea.attrs((p) => ({
   type: 'text',
   maxLength: 24,
-  cols: 6,
+  cols: 8,
 }))`
   grid-area: ctnt;
-  font-family: 'Fira Code';
+  font-family: 'Quicksand';
   font-weight: 600;
   width: auto;
   resize: none;
@@ -83,10 +84,10 @@ const HueArea = styled.textarea.attrs((p) => ({
 const ShadeArea = styled.textarea.attrs((p) => ({
   type: 'text',
   maxLength: 24,
-  cols: 6,
+  cols: 8,
 }))`
   grid-area: ctnt;
-  font-family: 'Fira Code';
+  font-family: 'Quicksand';
   font-weight: 600;
   width: auto;
   resize: none;
@@ -113,7 +114,6 @@ export function PalleteHeader<T extends HeadingInfo>(props: PalleteHeaderProps<T
   const NameRef = React.useRef<HTMLTextAreaElement>();
 
   if (NameRef.current) NameRef.current.value = props.info.name;
-  console.log(props);
   const up = clickHandle(S.rearrangeLayer(type, props.index, props.index - 1));
   const down = clickHandle(S.rearrangeLayer(type, props.index, props.index + 1));
   const NameLen = props.info.name.length;
