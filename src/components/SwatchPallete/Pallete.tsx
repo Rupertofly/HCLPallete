@@ -1,32 +1,78 @@
 import React, { memo } from 'react';
 import * as T from '../../types';
+import * as S from '../../stateCode';
+import * as ED from 'riek';
 import Swatch from './Swatch';
+import PH from './PalleteHeader';
 interface Props {
-    st: T.State;
-    selected: [number, number];
-    select: React.Dispatch<T.SelectionOptions>;
+  st: S.State;
+  selected: [number, number];
+  select: (toSelect: [number, number]) => any;
+  dispatch: React.Dispatch<S.Actions>;
 }
+// Comment
+export function Pallete({ st, select, selected, dispatch }: Props) {
+  return (
+    <table style={{ borderSpacing: 0, fontFamily: 'fira code' }}>
+      <tbody>
+        <tr>
+          <th />
+          {st.shades.map((sh, i) => {
+            return (
+              <th
+                style={{
+                  backgroundColor: i === selected[1] ? '#e0e0e0ff' : '#fefefe00',
 
-export function Pallete({ st, select, selected }: Props) {
-    return (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {st.colours.map((hue, hueIndex) => {
+                  transition: 'background-color 233ms',
+                }}
+                key={i}>
+                {' '}
+                <input
+                  type='textarea'
+                  name='shades'
+                  value={sh.name}
+                  size={6}
+                  style={{ border: 0, fontFamily: 'fira code', background: '0' }}
+                />
+              </th>
+            );
+          })}
+        </tr>
+        {st.colours.map((hue, hueIndex) => {
+          return (
+            <tr key={hueIndex}>
+              <PH
+                info={st.hues[hueIndex]}
+                index={hueIndex}
+                dispatch={dispatch}
+                style={{
+                  backgroundColor: hueIndex === selected[0] ? '#e0e0e0ff' : '#fefefe00',
+
+                  transition: 'background-color 233ms',
+                }}></PH>
+              {hue.map((col, shadeIndex) => {
                 return (
-                    <div key={hueIndex} style={{ display: 'flex', flexDirection: 'row' }}>
-                        {hue.map((col, shadeIndex) => {
-                            return (
-                                <Swatch
-                                    key={shadeIndex}
-                                    color={col}
-                                    location={[hueIndex, shadeIndex]}
-                                    selected={hueIndex === selected[0] && shadeIndex === selected[1]}
-                                    reducer={select}
-                                />
-                            );
-                        })}
-                    </div>
+                  <td
+                    style={{
+                      backgroundColor:
+                        hueIndex === selected[0] || shadeIndex === selected[1] ? '#e0e0e0ff' : '#fefefe00',
+
+                      transition: 'background-color 233ms',
+                    }}>
+                    <Swatch
+                      key={shadeIndex}
+                      color={col}
+                      location={[hueIndex, shadeIndex]}
+                      selected={hueIndex === selected[0] && shadeIndex === selected[1]}
+                      selector={select}
+                    />
+                  </td>
                 );
-            })}
-        </div>
-    );
+              })}
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
 }

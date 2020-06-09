@@ -1,7 +1,7 @@
 import { PalleteImport } from './state';
 
 //#region Colour Actions
-export const enum COLOUR_ACTION_TYPES {
+export enum COLOUR_ACTION_TYPES {
   SET_VAL = 'setValue',
   SET_COLOR = 'setColor',
 }
@@ -42,7 +42,7 @@ export type ColourActions = ActionSetColour | ActionSetValue;
 //#endregion
 //#region Pallete Actions
 
-export const enum PALLETE_ACTION_TYPES {
+export enum PALLETE_ACTION_TYPES {
   ADD_LAYER = 'addLayer',
   REMOVE_LAYER = 'removeLayer',
   REARRANGE_LAYER = 'rearrangeLayer',
@@ -130,7 +130,7 @@ export type PalleteActions =
   | ActionRenameLayer;
 //#endregion
 //#region Global Actions
-export const enum GLOBAL_ACTION_TYPES {
+export enum GLOBAL_ACTION_TYPES {
   LOAD_PALLETE = 'loadPallete',
   SAVE_PALLETE = 'savePallete',
   RENAME_PALLETE = 'renamePallete',
