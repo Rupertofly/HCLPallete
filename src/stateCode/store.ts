@@ -1,7 +1,8 @@
-import { State, Colour, defaultState } from './State';
+import { State, Colour, defaultState, PalleteImport } from './State';
 import * as Actions from './actions';
 import * as d3 from 'd3';
 import { uniqueId } from 'lodash';
+import { JSONPallete } from '../types';
 const TAU = 2 * Math.PI;
 const fromDeg = (n) => n * (TAU / 360);
 const toDeg = (n) => n * (360 / TAU);
@@ -75,6 +76,7 @@ function calculateColour(a: string | number, b?: number | string, cc?: number, i
 }
 
 // Colour Handlers
+/* eslint-disable @typescript-eslint/no-use-before-define */
 
 export function handleSetVal(oldState: State, { options }: Actions.ActionSetValue['action']): State {
   const newState: State = {
@@ -89,8 +91,16 @@ export function handleSetVal(oldState: State, { options }: Actions.ActionSetValu
     }),
   };
 
-  return newState;
+  switch (options.property) {
+    case 'h':
+      return handleCalculateLayer(newState, Actions.calculateLayer('hue', options.hue).action);
+    case 'l':
+      return handleCalculateLayer(newState, Actions.calculateLayer('shade', options.shade).action);
+    default:
+      return newState;
+  }
 }
+
 export function handleSetColour(oldState: State, { options }: Actions.ActionSetColour['action']): State {
   const newState: State = {
     ...oldState,
@@ -105,9 +115,12 @@ export function handleSetColour(oldState: State, { options }: Actions.ActionSetC
     }),
   };
 
-  return newState;
+  return handleCalculateLayer(
+    handleCalculateLayer(newState, Actions.calculateLayer('shade', options.shade).action),
+    Actions.calculateLayer('hue', options.hue).action
+  );
 }
-
+/* eslint-enable @typescript-eslint/no-use-before-define */
 // Pallete Handlers
 
 function degDist(a: number, b: number) {
@@ -233,4 +246,89 @@ export function handleRenameLayer(oldState: State, { options }: Actions.ActionRe
     default:
       return oldState;
   }
+}
+export function handleCalculateLayer(oldState: State, { options }: Actions.ActionCalculateLayer['action']): State {
+  switch (options.type) {
+    case 'hue':
+      return {
+        ...oldState,
+        hues: replaceAt(oldState.hues, options.index, (v) => ({
+          ...v,
+          avgHue: circularMean(oldState.colours[options.index].map((b) => b.h)),
+        })),
+      };
+    case 'shade':
+      return {
+        ...oldState,
+        shades: replaceAt(oldState.shades, options.index, (v) => ({
+          ...v,
+          avgValue: circularMean(oldState.colours.map((b) => b[options.index].l)),
+        })),
+      };
+    default:
+      return oldState;
+  }
+}
+
+// Global Handlers
+function calculateAverages(state: State) {
+  return [
+    ...state.hues.map((v, i) => ['hue', i] as const),
+    ...state.shades.map((v, i) => ['shade', i] as const),
+  ].reduce(
+    (runningState, action) => handleCalculateLayer(runningState, Actions.calculateLayer(action[0], action[1]).action),
+    state
+  );
+}
+function parseImportedPallete(importedPallete: PalleteImport): State {
+  const newState: State = {
+    name: importedPallete.name,
+    colours: importedPallete.colours.map((hu) => hu.map((cl) => calculateColour(cl.h, cl.c, cl.l))),
+    shades: importedPallete.shades.map((v) => ({ avgValue: 50, id: uniqueId('shade-'), name: v })),
+    hues: importedPallete.hues.map((v) => ({ avgHue: 50, id: uniqueId('hue-'), name: v })),
+  };
+
+  return calculateAverages(newState);
+}
+function stringifyState(state: State): string {
+  const output: PalleteImport = {
+    colours: state.colours.map((hu) => hu.map(({ h, c, l }) => ({ h, c, l }))),
+    shades: state.shades.map((s) => s.name),
+    hues: state.hues.map((s) => s.name),
+    name: state.name,
+  };
+
+  return JSON.stringify(output);
+}
+
+export function handleLoadPallete(oldState: State, { options }: Actions.ActionLoadPallete['action']): State {
+  const dataString = localStorage.getItem(options.name);
+
+  if (!dataString) return oldState;
+
+  return parseImportedPallete(JSON.parse(dataString));
+}
+
+export function handleSavePallete(oldState: State, { options }: Actions.ActionSavePallete['action']): State {
+  const saveString = stringifyState(oldState);
+
+  localStorage.setItem(oldState.name, saveString);
+
+  return oldState;
+}
+
+export function handleRenamePallete(oldState: State, { options }: Actions.ActionRenamePallete['action']): State {
+  return { ...oldState, name: options.newName };
+}
+
+export function handleImportPallete(oldState: State, { options }: Actions.ActionImportPallete['action']): State {
+  const newState = parseImportedPallete(options.toImport);
+
+  return newState;
+}
+export function handleRebuildPallete(oldState: State, { options }: Actions.ActionRebuildPallete['action']): State {
+  return calculateAverages({
+    ...oldState,
+    colours: nDimensionalReplaceAt(oldState.colours, ['_', '_'], (c: Colour) => calculateColour(c.hex, c.id)),
+  });
 }
