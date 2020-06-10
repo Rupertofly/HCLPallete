@@ -280,6 +280,7 @@ function calculateAverages(state: State) {
 function parseImportedPallete(importedPallete: PalleteImport): State {
   const newState: State = {
     selected: [-1, -1],
+    drag: false,
     name: importedPallete.name,
     colours: importedPallete.colours.map((hu) => hu.map((cl) => calculateColour(cl.h, cl.c, cl.l))),
     shades: importedPallete.shades.map((v) => ({ avgValue: 50, id: uniqueId('shade-'), name: v })),
@@ -332,4 +333,7 @@ export function handleRebuildPallete(oldState: State, { options }: Actions.Actio
 }
 export function handleSelectColour(oldState: State, { options }: Actions.ActionSelectColour['action']): State {
   return { ...oldState, selected: options.location };
+}
+export function handleDrag(oldState: State, { options }: Actions.ActionDrag['action']): State {
+  return { ...oldState, drag: options.isDragging };
 }

@@ -44,6 +44,8 @@ function globalReducer(state: State, { action }: A.GlobalActions): State {
       return Store.handleRebuildPallete(state, action);
     case TAP.SELECT_COLOUR:
       return Store.handleSelectColour(state, action);
+    case TAP.DRAG:
+      return Store.handleDrag(state, action);
     default:
       return state;
   }

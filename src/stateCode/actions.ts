@@ -136,6 +136,7 @@ export enum GLOBAL_ACTION_TYPES {
   IMPORT_PALLETE = 'importPallete',
   REBUILD = 'rebuild',
   SELECT_COLOUR = 'selectColour',
+  DRAG = 'drag',
 }
 // Load Pallete
 export function loadPallete(name: string) {
@@ -200,6 +201,7 @@ export function rebuildPallete() {
   } as const;
 }
 export type ActionRebuildPallete = ReturnType<typeof rebuildPallete>;
+// Select Colour
 export function selectColour(location: [number, number]) {
   return {
     actionType: 'GLOBAL',
@@ -212,13 +214,26 @@ export function selectColour(location: [number, number]) {
   } as const;
 }
 export type ActionSelectColour = ReturnType<typeof selectColour>;
-
+// Drag
+export function drag(isDragging: boolean) {
+  return {
+    actionType: 'GLOBAL',
+    action: {
+      type: GLOBAL_ACTION_TYPES.DRAG,
+      options: {
+        isDragging,
+      },
+    },
+  } as const;
+}
+export type ActionDrag = ReturnType<typeof drag>;
 export type GlobalActions =
   | ActionLoadPallete
   | ActionSavePallete
   | ActionImportPallete
   | ActionRenamePallete
   | ActionRebuildPallete
-  | ActionSelectColour;
+  | ActionSelectColour
+  | ActionDrag;
 //#endregion
 export type Actions = ColourActions | PalleteActions | GlobalActions;
