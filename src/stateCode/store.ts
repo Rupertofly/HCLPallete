@@ -1,8 +1,8 @@
-import { State, Colour, defaultState, PalleteImport } from './State';
+import { State, Colour, PalleteImport } from './State';
 import * as Actions from './actions';
 import * as d3 from 'd3';
 import { uniqueId } from 'lodash';
-import { JSONPallete } from '../types';
+import * as NTC from 'ntcjs';
 const TAU = 2 * Math.PI;
 const fromDeg = (n) => n * (TAU / 360);
 const toDeg = (n) => n * (360 / TAU);
@@ -59,8 +59,10 @@ function calculateColour(a: string | number, b?: number | string, cc?: number, i
   const hex = color.hex();
   const { h, c, l } = color;
   const realCol = d3.hcl(hex);
+  const name = NTC.name(hex)[1];
 
   return {
+    name,
     id,
     h,
     c,
@@ -193,12 +195,14 @@ export function handleRemoveLayer(oldState: State, { options }: Actions.ActionRe
     case 'hue':
       return {
         ...oldState,
+        selected: [-1, -1],
         hues: oldState.hues.filter((v, i) => i !== options.index),
         colours: oldState.colours.filter((v, i) => i !== options.index),
       };
     case 'shade':
       return {
         ...oldState,
+        selected: [-1, -1],
         shades: oldState.shades.filter((v, i) => i !== options.index),
         colours: oldState.colours.map((v) => v.filter((b, i) => i !== options.index)),
       };
@@ -282,6 +286,7 @@ function calculateAverages(state: State) {
 }
 function parseImportedPallete(importedPallete: PalleteImport): State {
   const newState: State = {
+    selected: [-1, -1],
     name: importedPallete.name,
     colours: importedPallete.colours.map((hu) => hu.map((cl) => calculateColour(cl.h, cl.c, cl.l))),
     shades: importedPallete.shades.map((v) => ({ avgValue: 50, id: uniqueId('shade-'), name: v })),
@@ -331,4 +336,7 @@ export function handleRebuildPallete(oldState: State, { options }: Actions.Actio
     ...oldState,
     colours: nDimensionalReplaceAt(oldState.colours, ['_', '_'], (c: Colour) => calculateColour(c.hex, c.id)),
   });
+}
+export function handleSelectColour(oldState: State, { options }: Actions.ActionSelectColour['action']): State {
+  return { ...oldState, selected: options.location };
 }

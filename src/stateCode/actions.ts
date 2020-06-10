@@ -1,5 +1,4 @@
 import { PalleteImport } from './state';
-
 //#region Colour Actions
 export enum COLOUR_ACTION_TYPES {
   SET_VAL = 'setValue',
@@ -136,6 +135,7 @@ export enum GLOBAL_ACTION_TYPES {
   RENAME_PALLETE = 'renamePallete',
   IMPORT_PALLETE = 'importPallete',
   REBUILD = 'rebuild',
+  SELECT_COLOUR = 'selectColour',
 }
 // Load Pallete
 export function loadPallete(name: string) {
@@ -200,12 +200,25 @@ export function rebuildPallete() {
   } as const;
 }
 export type ActionRebuildPallete = ReturnType<typeof rebuildPallete>;
+export function selectColour(location: [number, number]) {
+  return {
+    actionType: 'GLOBAL',
+    action: {
+      type: GLOBAL_ACTION_TYPES.SELECT_COLOUR,
+      options: {
+        location,
+      },
+    },
+  } as const;
+}
+export type ActionSelectColour = ReturnType<typeof selectColour>;
 
 export type GlobalActions =
   | ActionLoadPallete
   | ActionSavePallete
   | ActionImportPallete
   | ActionRenamePallete
-  | ActionRebuildPallete;
+  | ActionRebuildPallete
+  | ActionSelectColour;
 //#endregion
 export type Actions = ColourActions | PalleteActions | GlobalActions;
