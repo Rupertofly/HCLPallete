@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import * as T from '../../types';
 import * as S from '../../stateCode';
-import * as ED from 'riek';
 import Swatch from './Swatch';
 import styled from 'styled-components';
 import PH from './PalleteHeader';
@@ -35,17 +34,16 @@ const HB = styled.button`
 interface Props {
   st: S.State;
   selected: [number, number];
-  select: (toSelect: [number, number]) => any;
   dispatch: React.Dispatch<S.Actions>;
 }
 // Comment
-export function Pallete({ st, select, selected, dispatch }: Props) {
+export function Pallete({ st, selected, dispatch }: Props) {
   const selectedHex: string | undefined =
     selected[0] < 0 || selected[1] < 0 ? undefined : st.colours[selected[0]][selected[1]].hex;
   const detBox = React.useRef<HTMLInputElement>();
   const [details, setDetails] = React.useState(!!detBox.current?.checked);
 
-  React.useEffect(() => select([-1, -1]), []);
+  React.useEffect(() => dispatch(S.selectColour([-1, -1])), []);
 
   return (
     <table style={{ borderSpacing: 0, fontFamily: 'fira code' }}>
@@ -100,7 +98,7 @@ export function Pallete({ st, select, selected, dispatch }: Props) {
                       selectedColor={selectedHex}
                       location={[hueIndex, shadeIndex]}
                       selected={hueIndex === selected[0] && shadeIndex === selected[1]}
-                      selector={select}
+                      dispatch={dispatch}
                     />
                   </td>
                 );

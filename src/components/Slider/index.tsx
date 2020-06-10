@@ -1,11 +1,12 @@
 import React, { ReactElement, useRef, useState } from 'react';
 import styled from 'styled-components';
 import * as T from '../../types';
+import { Colour } from '../../stateCode';
 import { uniqueId } from 'lodash';
 import { SliderGradient } from './SliderGradient';
 import { SliderHandle } from './SliderHandle';
 import SliderMarker from './SliderMarker';
-export interface SliderProps extends T.Col {
+export interface SliderProps extends Colour {
   /**
    * Min value
    */

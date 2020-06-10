@@ -93,14 +93,7 @@ export function handleSetVal(oldState: State, { options }: Actions.ActionSetValu
     }),
   };
 
-  switch (options.property) {
-    case 'h':
-      return handleCalculateLayer(newState, Actions.calculateLayer('hue', options.hue).action);
-    case 'l':
-      return handleCalculateLayer(newState, Actions.calculateLayer('shade', options.shade).action);
-    default:
-      return newState;
-  }
+  return newState;
 }
 
 export function handleSetColour(oldState: State, { options }: Actions.ActionSetColour['action']): State {

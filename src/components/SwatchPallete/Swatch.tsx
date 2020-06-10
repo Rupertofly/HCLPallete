@@ -31,12 +31,12 @@ interface Props {
   location: [number, number];
   color: S.Colour;
   selected: boolean;
-  selector: (toSelect: [number, number]) => any;
+  dispatch: React.Dispatch<S.Actions>;
   details: boolean;
   selectedColor?: string;
 }
 
-export function Swatch({ color, selected, selectedColor, location, details, selector }: Props): ReactElement {
+export function Swatch({ color, selected, selectedColor, location, details, dispatch }: Props): ReactElement {
   const svgProps = {
     viewbox: '0 0 1 1',
   };
@@ -46,8 +46,6 @@ export function Swatch({ color, selected, selectedColor, location, details, sele
   };
 
   const ll: number = WCAG.hex(color.hex, selectedColor ?? '#ffffff');
-
-  console.log(ll);
 
   return (
     <SButton
@@ -59,19 +57,33 @@ export function Swatch({ color, selected, selectedColor, location, details, sele
         } as any
       }
       onClick={() => {
-        if (selected) selector([-1, -1]);
-        else selector(location);
+        if (selected) dispatch(S.selectColour([-1, -1]));
+        else dispatch(S.selectColour(location));
       }}>
       {details ? (
-        <span
-          style={{
-            position: 'absolute',
-            top: '0.1em',
-            fontSize: '0.8em',
-            color: selectedColor ?? 'white',
-          }}>
-          {ll.toFixed(2)} {WCAG.score(ll)}
-        </span>
+        <>
+          <span
+            style={{
+              position: 'absolute',
+              top: '0.1em',
+              fontSize: '0.8em',
+              color: selectedColor ?? 'white',
+            }}>
+            {ll.toFixed(2)} {WCAG.score(ll)}
+          </span>
+          <span
+            style={{
+              position: 'absolute',
+              bottom: '0.15em',
+              right: '0.2em',
+              padding: '0.05em',
+              fontSize: '0.6em',
+              textAlign: 'right',
+              color: !color.light ? 'white' : 'black',
+            }}>
+            {color.name}
+          </span>{' '}
+        </>
       ) : null}
     </SButton>
   );
