@@ -3,36 +3,50 @@ import * as S from '../src/stateCode';
 import { Pallete } from '../src/components/SwatchPallete/Pallete';
 import * as SL from '../src/components/Slider';
 import { COL_PROPS } from '../src/types';
+import styled, { createGlobalStyle } from 'styled-components';
+const DARK_MODE = true;
+const GB = createGlobalStyle`
+:root {
+  --bg-col:${DARK_MODE ? '#2c3137' : '#fefefe'};
+  --text-col:${DARK_MODE ? '#fefefe' : '#2c3137'};
+  --bg-highlight:${DARK_MODE ? '#666561' : '#cccac1'};
+  color: var(--text-col);
+  background-color: var(--bg-col);
+}
+textarea {
+  color: var(--text-col);
+  background-color: var(--bg-col);
+}
+`;
 
 export default { title: 'Pallete', component: Pallete };
 
 export const PalleteStory = () => {
   const [state, dispatch] = React.useReducer(S.reducer, S.defaultState);
   const [drag, setDrag] = React.useState(false);
+  const selectedHue = state.selected[0];
 
   return (
     <div style={{ display: 'flex' }}>
+      <GB />
       <Pallete st={state} selected={state.selected} dispatch={dispatch} />
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex' }}>
           {state.selected[0] >= 0
             ? state.colours[state.selected[0]].map((colour, index) => {
+                const avgHue = state.hues[state.selected[0]].avgHue;
+
                 return (
                   <SL.Slider
                     {...colour}
-                    instant={drag}
-                    max={360 % (360 + state.hues[state.selected[0]].avgHue + 90)}
-                    min={360 % (360 + state.hues[state.selected[0]].avgHue - 90)}
-                    onChange={(v) =>
-                      dispatch(S.setValue({ hue: state.selected[0], shade: index, property: 'h', value: v }))
-                    }
-                    onStart={() => setDrag(true)}
-                    onEnd={() => {
-                      setDrag(false);
-                      dispatch(S.calculateLayer('hue', state.selected[0]));
-                    }}
+                    fine
+                    fineCenter={avgHue}
+                    fineOffset={90}
+                    drag={drag}
+                    dispatch={dispatch}
                     type={COL_PROPS.h}
                     key={index}
+                    loc={[state.selected[0], index]}
                   />
                 );
               })
@@ -44,18 +58,10 @@ export const PalleteStory = () => {
                 return (
                   <SL.Slider
                     {...colour}
-                    instant={drag}
-                    max={130}
-                    min={0}
-                    onChange={(v) =>
-                      dispatch(S.setValue({ hue: state.selected[0], shade: index, property: 'c', value: v }))
-                    }
-                    onStart={() => setDrag(true)}
-                    onEnd={() => {
-                      setDrag(false);
-                      dispatch(S.calculateLayer('hue', state.selected[0]));
-                    }}
+                    dispatch={dispatch}
+                    loc={[selectedHue, index]}
                     type={COL_PROPS.c}
+                    drag={drag}
                     key={index}
                   />
                 );
@@ -68,18 +74,10 @@ export const PalleteStory = () => {
                 return (
                   <SL.Slider
                     {...colour}
-                    instant={drag}
-                    max={100}
-                    min={0}
-                    onChange={(v) =>
-                      dispatch(S.setValue({ hue: state.selected[0], shade: index, property: 'l', value: v }))
-                    }
-                    onStart={() => setDrag(true)}
-                    onEnd={() => {
-                      setDrag(false);
-                      dispatch(S.calculateLayer('hue', state.selected[0]));
-                    }}
+                    dispatch={dispatch}
+                    loc={[selectedHue, index]}
                     type={COL_PROPS.l}
+                    drag={drag}
                     key={index}
                   />
                 );

@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react';
-import { Slider } from '../src/components/Slider/Slider';
+import { Slider } from '../src/components/Slider';
 import * as d3 from 'd3';
 import * as knobs from '@storybook/addon-knobs';
 export default { title: 'slider', decorators: [knobs.withKnobs] };

@@ -1,5 +1,6 @@
 import { uniqueId as uID } from 'lodash';
 import * as NT from 'ntcjs';
+import * as d3 from 'd3';
 export interface Colour {
   id: string;
   h: number;
@@ -35,14 +36,14 @@ export const defaultState = {
   selected: [-1, -1] as [number, number],
   drag: false,
   hues: [
-    { id: uID('hue-'), name: 'Pinks', avgHue: 276.22670612171225 },
-    { id: uID('hue-'), name: 'Oranges', avgHue: 315.71999345370483 },
-    { id: uID('hue-'), name: 'Yellows', avgHue: 8.001678664721135 },
-    { id: uID('hue-'), name: 'Greens', avgHue: 52.00200023440547 },
-    { id: uID('hue-'), name: 'Aquas', avgHue: 86.55989623299905 },
-    { id: uID('hue-'), name: 'Purples', avgHue: 303.0620022099017 },
-    { id: uID('hue-'), name: 'YGreys', avgHue: 32.319630634667035 },
-    { id: uID('hue-'), name: 'PGreys', avgHue: 295.0559944983775 },
+    { id: uID('hue-'), name: 'Pinks', avgHue: 8.0 },
+    { id: uID('hue-'), name: 'Oranges', avgHue: 52.0 },
+    { id: uID('hue-'), name: 'Yellows', avgHue: 86.56 },
+    { id: uID('hue-'), name: 'Greens', avgHue: 123.06 },
+    { id: uID('hue-'), name: 'Aquas', avgHue: 212.32 },
+    { id: uID('hue-'), name: 'Purples', avgHue: 295.06 },
+    { id: uID('hue-'), name: 'YGreys', avgHue: 96.23 },
+    { id: uID('hue-'), name: 'PGreys', avgHue: 315.72 },
   ] as HueInfo[],
   shades: [
     { id: uID('shade-'), name: 'Pales', avgValue: 89.59999999999998 },
@@ -471,3 +472,24 @@ export const defaultState = {
   ] as Colour[][],
 };
 export type State = typeof defaultState;
+const TAU = 2 * Math.PI;
+const fromDeg = (n) => n * (TAU / 360);
+const toDeg = (n) => n * (360 / TAU);
+
+function circularMean(angles: number[]) {
+  const mSin = d3.mean(angles.map((a) => Math.sin(fromDeg(a))));
+  const mCos = d3.mean(angles.map((a) => Math.cos(fromDeg(a))));
+  const newAngle = Math.atan2(mSin, mCos);
+
+  return toDeg((TAU + newAngle) % TAU);
+}
+console.log(
+  defaultState.colours
+    .map((hueSet, i) => {
+      const name = defaultState.hues[i].name;
+      const newAvg = circularMean(hueSet.map((c) => c.h));
+
+      return `${name}: ${newAvg.toFixed(2)}`;
+    })
+    .join('\n')
+);

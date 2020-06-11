@@ -6,7 +6,7 @@ import { Pallete } from '../src/components/SwatchPallete/Pallete';
 import { pallete } from '../src/importablePallete';
 import * as Reds from '../src/store';
 import { Col, State, COL_PROPS, ACTION_TYPES } from '../src/types';
-import { Slider } from '../src/components/Slider/Slider';
+import { Slider } from '../src/components/Slider';
 export default {
   title: 'Button',
   component: Button,

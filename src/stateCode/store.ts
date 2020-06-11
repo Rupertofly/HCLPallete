@@ -41,7 +41,7 @@ function nDimensionalReplaceAt<T, U extends nDimensionalArray<T>>(
 function circularMean(angles: number[]) {
   const mSin = d3.mean(angles.map((a) => Math.sin(fromDeg(a))));
   const mCos = d3.mean(angles.map((a) => Math.cos(fromDeg(a))));
-  const newAngle = Math.atan(mSin / mCos);
+  const newAngle = Math.atan2(mSin, mCos);
 
   return toDeg((TAU + newAngle) % TAU);
 }

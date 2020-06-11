@@ -19,7 +19,8 @@ const HB = styled.button`
   font-weight: 400;
   border-radius: 25%;
   transition: transform 233ms, background-color 64ms;
-  background-color: white;
+  background-color: transparent;
+  color: var(--text-col);
   &:hover {
     font-weight: 800;
   }
@@ -54,7 +55,7 @@ export function Pallete({ st, selected, dispatch }: Props) {
             Details
           </td>
           {st.shades.map((sh, i) => {
-            return <PH info={st.shades[i]} index={i} len={st.shades.length} dispatch={dispatch} key={i} />;
+            return <PH info={st.shades[i]} index={i} LayerLength={st.shades.length} dispatch={dispatch} key={i} />;
           })}
           <td>
             <HB
@@ -72,10 +73,10 @@ export function Pallete({ st, selected, dispatch }: Props) {
               <PH
                 info={st.hues[hueIndex]}
                 index={hueIndex}
-                len={st.hues.length}
+                LayerLength={st.hues.length}
                 dispatch={dispatch}
                 style={{
-                  backgroundColor: hueIndex === selected[0] ? '#e0e0e0ff' : '#fefefe00',
+                  backgroundColor: hueIndex === selected[0] ? 'var(--bg-highlight)' : 'transparent',
 
                   transition: 'background-color 233ms',
                 }}
@@ -86,7 +87,7 @@ export function Pallete({ st, selected, dispatch }: Props) {
                     key={shadeIndex}
                     style={{
                       backgroundColor:
-                        hueIndex === selected[0] || shadeIndex === selected[1] ? '#e0e0e0ff' : '#fefefe00',
+                        hueIndex === selected[0] || shadeIndex === selected[1] ? 'var(--bg-highlight)' : 'transparent',
 
                       transition: 'background-color 233ms',
                       textAlign: 'center',
@@ -106,6 +107,15 @@ export function Pallete({ st, selected, dispatch }: Props) {
             </tr>
           );
         })}
+        <tr>
+          <HB
+            onClick={(e) => {
+              dispatch(S.addLayer('hue'));
+            }}
+            style={{ verticalAlign: 'middle', fontSize: '1.5em' }}>
+            +
+          </HB>
+        </tr>
       </tbody>
     </table>
   );
