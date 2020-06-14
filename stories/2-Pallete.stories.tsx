@@ -2,6 +2,7 @@ import React from 'react';
 import * as S from '../src/stateCode';
 import { Pallete } from '../src/components/SwatchPallete/Pallete';
 import * as SL from '../src/components/Slider';
+import DS from '../src/components/Disk/DiskSlider';
 import { COL_PROPS } from '../src/types';
 import styled, { createGlobalStyle } from 'styled-components';
 const DARK_MODE = true;
@@ -25,11 +26,13 @@ export const PalleteStory = () => {
   const [state, dispatch] = React.useReducer(S.reducer, S.defaultState);
   const [drag, setDrag] = React.useState(false);
   const selectedHue = state.selected[0];
+  const col = state.colours[2][2];
 
   return (
     <div style={{ display: 'flex' }}>
       <GB />
       <Pallete st={state} selected={state.selected} dispatch={dispatch} />
+      <DS {...col} dispatch={dispatch} loc={[2, 2]} />
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex' }}>
           {state.selected[0] >= 0
