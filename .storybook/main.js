@@ -1,15 +1,16 @@
 module.exports = {
-    extend: [''],
-    stories: ['../stories/**/*.stories.[jt]s?(x)'],
-    addons: [
-        '@storybook/preset-typescript',
-        '@storybook/addon-actions',
-        '@storybook/addon-links',
-        '@storybook/addon-knobs',
-    ],
-    webpackFinal: async (config) => {
-        // do mutation to the config
-
-        return config;
-    },
+  extend: [''],
+  stories: ['../stories/**/*.stories.[jt]s?(x)'],
+  addons: [
+    '@storybook/preset-scss',
+    '@storybook/preset-typescript',
+    '@storybook/addon-actions',
+    '@storybook/addon-links',
+    '@storybook/addon-knobs',
+  ],
+  webpackFinal: async (config) => {
+    // do mutation to the config
+    config.module.rules.push({});
+    return config;
+  },
 };

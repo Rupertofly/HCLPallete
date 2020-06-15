@@ -1,0 +1,21 @@
+.dark {
+  --bg-col: #2c3137;
+  --text-col: #fefefe;
+  --bg-highlight: #666561;
+  color: var(--text-col);
+  background-color: var(--bg-col);
+}
+.light {
+  --bg-col: #fefefe;
+
+  --text-col: #2c3137;
+
+  --bg-highlight: #cccac1;
+
+  color: var(--text-col);
+  background-color: var(--bg-col);
+}
+textarea {
+  color: var(--text-col);
+  background-color: var(--bg-col);
+}
