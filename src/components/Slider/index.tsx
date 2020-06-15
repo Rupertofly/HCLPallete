@@ -1,13 +1,12 @@
 import React, { ReactElement, useRef, useState } from 'react';
 import styled from 'styled-components';
-import * as T from '../../types';
 import * as S from '../../stateCode';
 import { uniqueId } from 'lodash';
 import { SliderGradient } from './SliderGradient';
 import { SliderHandle } from './SliderHandle';
 import SliderMarker from './SliderMarker';
 export interface BaseSliderProps extends S.Colour {
-  type: T.COL_PROPS;
+  type: S.ColourProperties;
   loc: [number, number];
   dispatch: React.Dispatch<S.Actions>;
   drag: boolean;
@@ -23,6 +22,7 @@ interface FullSliderProps extends BaseSliderProps {
   fineCenter?: never;
   fineOffset?: never;
 }
+
 export type SliderProps = FullSliderProps | FineSliderProps;
 function fromNormalised(t: number, min: number, max: number) {
   const circular = min >= max;

@@ -15,6 +15,7 @@ export interface Colour {
     l: number;
   };
 }
+export type ColourProperties = 'h' | 'c' | 'l';
 export interface HueInfo {
   id: string;
   name: string;
@@ -483,13 +484,3 @@ function circularMean(angles: number[]) {
 
   return toDeg((TAU + newAngle) % TAU);
 }
-console.log(
-  defaultState.colours
-    .map((hueSet, i) => {
-      const name = defaultState.hues[i].name;
-      const newAvg = circularMean(hueSet.map((c) => c.h));
-
-      return `${name}: ${newAvg.toFixed(2)}`;
-    })
-    .join('\n')
-);
