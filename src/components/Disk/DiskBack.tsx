@@ -1,13 +1,7 @@
 import React, { useRef } from 'react';
 import * as d3 from 'd3';
 import { BackProps, TAU } from './DiskSlider';
-import * as t from '../../types';
-import styled from 'styled-components';
-
-const OutEdge = styled.path<{ light: boolean }>`
-  fill: ${(p) => (p.light ? t.UICOLOURS.LIGHT_COL : t.UICOLOURS.DARK_COL)};
-  transition: fill 0.15s;
-`;
+import './DiskSlider.scss';
 
 export const DiskBack = ({ c, l, count, backRef }: BackProps) => {
   const { floor: flr, random: rnd } = Math;
@@ -41,7 +35,11 @@ export const DiskBack = ({ c, l, count, backRef }: BackProps) => {
         <rect x='-1' y='-1' width='2' height='2' fill='black' />
         <path d={outerEdge} fill='white' />
       </mask>
-      <OutEdge d={outerEdge} light={l <= 50} ref={backRef} />
+      <path
+        d={outerEdge}
+        ref={backRef}
+        style={{ fill: l <= 50 ? 'var(--dark-border)' : 'var(--light-border)', transition: 'fill 0.15s' }}
+      />
       <g mask={'url(#' + idKey.current + ')'}>
         {d3.range(count).map((i) => (
           <path

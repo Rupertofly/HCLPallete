@@ -9,12 +9,6 @@ interface Props {
   value: number;
   light: boolean;
 }
-const MarkerLine = styled.path<{ light: boolean }>`
-  stroke: ${(p) => (p.light ? t.UICOLOURS.LIGHT_COL : t.UICOLOURS.DARK_COL)};
-  stroke-width: 0.03;
-  stroke-linecap: round;
-  transition: stroke 0.15s;
-`;
 
 export default function DiskMarker({ value, light }: Props): ReactElement {
   const xA = cos(value * TAU - QTR);
@@ -22,7 +16,7 @@ export default function DiskMarker({ value, light }: Props): ReactElement {
 
   return (
     <g style={{ transform: `rotate(${value}deg)` }}>
-      <MarkerLine light={light} d={`M0.7,0L0.85,0`} />;
+      <path className={`marker-line ${!light ? 'dark-stroke' : 'light-stroke'}`} d={`M0.7,0L0.85,0`} />;
     </g>
   );
 }

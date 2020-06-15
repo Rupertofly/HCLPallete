@@ -1,0 +1,34 @@
+.outer-div {
+  width: 10em;
+  height: 10em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.disk-slider-numbers {
+  width: 3em;
+  height: 1.8em;
+  border: none;
+  text-align: center;
+  position: absolute;
+  font-family: 'Fira Code', monospace;
+}
+.marker-line {
+  stroke-width: 0.03;
+  stroke-linecap: round;
+  transition: stroke 0.15s;
+}
+.dark-stroke {
+  stroke: var(--dark-border);
+}
+.light-stroke {
+  stroke: var(--light-border);
+}
+.disk-handle {
+  stroke-width: 0.3;
+  transition: transform 0.15s, stroke 0.15s;
+  transform: scale(0.1);
+  &:hover {
+    transform: scale(0.15);
+  }
+}

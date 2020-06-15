@@ -1,0 +1,29 @@
+.dark-stroke {
+  stroke: var(--dark-border);
+}
+.light-stroke {
+  stroke: var(--light-border);
+}
+.swatch {
+  height: 5em;
+  width: 5em;
+  font-size: inherit;
+  margin: 0.15em;
+  border-width: 0.25em;
+  border-style: solid;
+
+  border-color: var(--border);
+  border-radius: 1em;
+  background-color: var(--fill);
+  transform: scale(1);
+  transition: transform 233ms, border-width 233ms;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.125);
+  }
+  &:focus {
+    outline: none;
+    border-style: double;
+  }
+}

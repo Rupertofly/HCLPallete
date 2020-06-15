@@ -1,3 +1,7 @@
+:root {
+  --dark-border: #f0f0f0;
+  --light-border: #2d2d2d;
+}
 .dark {
   --bg-col: #2c3137;
   --text-col: #fefefe;
@@ -18,4 +22,8 @@
 textarea {
   color: var(--text-col);
   background-color: var(--bg-col);
+}
+input[type='text'] {
+  background-color: inherit;
+  color: var(--text-col);
 }

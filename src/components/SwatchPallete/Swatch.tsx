@@ -4,28 +4,6 @@ import * as S from '../../stateCode';
 import styled from 'styled-components';
 import * as WCAG from 'wcag-contrast';
 import { hcl } from 'd3';
-const SButton = styled.button`
-  height: 5em;
-  width: 5em;
-  font-size: inherit;
-  margin: 0.15em;
-  border-width: 0.25em;
-  border-style: solid;
-
-  border-color: var(--border);
-  border-radius: 1em;
-  background-color: var(--fill);
-  transform: scale(1);
-  transition: transform 233ms, border-width 233ms;
-  cursor: pointer;
-
-  &:hover {
-    transform: scale(1.125);
-  }
-  &:focus {
-    outline: none;
-  }
-`;
 
 interface Props {
   location: [number, number];
@@ -48,7 +26,7 @@ export function Swatch({ color, selected, selectedColor, location, details, disp
   const ll: number = WCAG.hex(color.hex, selectedColor ?? '#ffffff');
 
   return (
-    <SButton
+    <button
       style={
         {
           '--fill': color.hex,
@@ -56,6 +34,7 @@ export function Swatch({ color, selected, selectedColor, location, details, disp
           ...css,
         } as any
       }
+      className={'swatch'}
       onClick={() => {
         if (selected) dispatch(S.selectColour([-1, -1]));
         else dispatch(S.selectColour(location));
@@ -85,7 +64,7 @@ export function Swatch({ color, selected, selectedColor, location, details, disp
           </span>{' '}
         </>
       ) : null}
-    </SButton>
+    </button>
   );
 }
 export default Swatch;

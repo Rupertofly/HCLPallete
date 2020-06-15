@@ -4,6 +4,7 @@ import { hcl, svg } from 'd3';
 import { DiskBack } from './DiskBack';
 import DM from './DiskMarker';
 import DH from './DiskHandle';
+import './DiskSlider.scss';
 export const TAU = Math.PI * 2;
 const toRAD = (a) => a * (TAU / 360);
 const toDEG = (a) => a * (360 / TAU);
@@ -62,12 +63,7 @@ const DiskSlider = (p: Props) => {
   };
 
   return (
-    <div
-      style={{
-        width: '16em',
-        height: '16em',
-      }}
-      ref={divRef}>
+    <div className='outer-div' ref={divRef}>
       <svg
         width='100%'
         ref={svgRef}
@@ -84,16 +80,7 @@ const DiskSlider = (p: Props) => {
         type='text'
         ref={inpRef}
         defaultValue={p.h.toFixed(1)}
-        style={{
-          width: 3 + 'em',
-          height: 1.8 + 'em',
-          margin: 'auto',
-          gridArea: '1/1/1/1',
-          border: '#00000000',
-          font: '1.5em Fira Code',
-          color: ' #232323',
-          textAlign: 'center',
-        }}
+        className='disk-slider-numbers'
         onKeyDown={(e) => {
           if (/[0-9]|Backspace|Delete|Left|Right|\./.test(e.key)) {
             return true;

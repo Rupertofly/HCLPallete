@@ -11,9 +11,10 @@
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": ["ESNext", "ES2019", "DOM"],
+    "lib": ["ESNext", "ES2019", "DOM", "es6"],
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["node", "dotenv"]
   },
   "typeAcquisition": { "enable": true },
   "exclude": ["node_modules", "test"],

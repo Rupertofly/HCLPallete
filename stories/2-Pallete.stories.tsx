@@ -6,6 +6,7 @@ import DS from '../src/components/Disk/DiskSlider';
 import { COL_PROPS } from '../src/types';
 import styled, { createGlobalStyle } from 'styled-components';
 import '../src/global.scss';
+import '../normalize.css';
 const DARK_MODE = true;
 
 export default { title: 'Pallete', component: Pallete };
@@ -17,7 +18,7 @@ export const PalleteStory = () => {
   const col = state.colours[2][2];
 
   return (
-    <div className={'dark'} style={{ display: 'flex' }}>
+    <div className={DARK_MODE ? 'dark' : 'light'} style={{ display: 'flex' }}>
       <Pallete st={state} selected={state.selected} dispatch={dispatch} />
       <DS {...col} dispatch={dispatch} loc={[2, 2]} />
       <div style={{ display: 'flex', flexDirection: 'column' }}>

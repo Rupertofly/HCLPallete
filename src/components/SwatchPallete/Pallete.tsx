@@ -4,6 +4,7 @@ import * as S from '../../stateCode';
 import Swatch from './Swatch';
 import styled from 'styled-components';
 import PH from './PalleteHeader';
+import './Pallete.scss';
 const HB = styled.button`
   border: 0;
   font-size: 1.2em;
