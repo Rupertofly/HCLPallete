@@ -35,15 +35,14 @@ const HB = styled.button`
 
 interface Props {
   st: S.State;
-  selected: [number, number];
   dispatch: React.Dispatch<S.Actions>;
 }
 // Comment
-export function Pallete({ st, selected, dispatch }: Props) {
-  const selectedHex: string | undefined =
-    selected[0] < 0 || selected[1] < 0 ? undefined : st.colours[selected[0]][selected[1]].hex;
+export function Pallete({ st, dispatch }: Props) {
   const detBox = React.useRef<HTMLInputElement>();
   const [details, setDetails] = React.useState(!!detBox.current?.checked);
+  const selected = st.selected;
+  const selectedColour = st.selected[0] > -1 ? st.colours[st.selected[0]][st.selected[1]].hex : '#ffffff';
 
   React.useEffect(() => dispatch(S.selectColour([-1, -1])), []);
 
@@ -97,7 +96,7 @@ export function Pallete({ st, selected, dispatch }: Props) {
                       key={shadeIndex}
                       color={col}
                       details={details}
-                      selectedColor={selectedHex}
+                      selectedColor={selectedColour}
                       location={[hueIndex, shadeIndex]}
                       selected={hueIndex === selected[0] && shadeIndex === selected[1]}
                       dispatch={dispatch}

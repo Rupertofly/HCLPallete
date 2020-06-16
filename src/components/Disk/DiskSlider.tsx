@@ -5,6 +5,7 @@ import { DiskBack } from './DiskBack';
 import DM from './DiskMarker';
 import DH from './DiskHandle';
 import './DiskSlider.scss';
+import { atan2deg } from './common';
 export const TAU = Math.PI * 2;
 const toRAD = (a) => a * (TAU / 360);
 const toDEG = (a) => a * (360 / TAU);
@@ -33,12 +34,12 @@ const DiskSlider = (p: Props) => {
     const cy = top + (bottom - top) / 2;
     const { clientX: mx, clientY: my } = e;
 
-    console.log(mx, my);
-
     const [oX, oY] = [mx - cx, my - cy];
-    const angle = (TAU + Math.atan2(oY, oX) + TAU / 4) % TAU;
 
-    setDrag((s) => ({ touched: true, startingPos: angle, startingVal: p.h }));
+    console.log('start', oX, oY);
+    const angle = atan2deg(oY, oX);
+
+    setDrag((s) => ({ touched: true, startingPos: (360 + angle) % 360, startingVal: p.h }));
   };
 
   function handleMove(e: React.PointerEvent<any>) {
@@ -49,9 +50,9 @@ const DiskSlider = (p: Props) => {
     const cy = top + (bottom - top) / 2;
     const { clientX: mx, clientY: my } = e;
     const [oX, oY] = [mx - cx, my - cy];
-    const angle = (TAU + Math.atan2(oY, oX) + TAU / 4) % TAU;
+    const angle = atan2deg(oY, oX);
     const currentOffset = angle - dragState.startingPos;
-    const newValue = toDEG((TAU + currentOffset) % TAU);
+    const newValue = (360 + (dragState.startingVal + currentOffset)) % 360;
 
     p.dispatch(S.setValue({ hue: p.loc[0], shade: p.loc[1], property: 'h', value: newValue }));
   }
@@ -67,6 +68,7 @@ const DiskSlider = (p: Props) => {
       <svg
         width='100%'
         ref={svgRef}
+        onTouchMoveCapture={(e) => e.preventDefault()}
         height='100%'
         viewBox={`-1 -1 2 2`}
         onPointerMoveCapture={handleMove}
@@ -74,7 +76,7 @@ const DiskSlider = (p: Props) => {
         onPointerUp={handleEnd}>
         <DiskBack c={p.c} l={p.l} count={32} backRef={pathBackingRef} />
         <DM light={p.light} value={p.r.h} />
-        <DH colour={p.hex} light={p.light} value={p.h} handleDown={handleStart} pushed={dragState.touched} />
+        <DH colour={p.hex} light={p.light} angle={p.h} handleDown={handleStart} pushed={dragState.touched} />
       </svg>
       <input
         type='text'
@@ -102,4 +104,3 @@ const DiskSlider = (p: Props) => {
 };
 
 export default DiskSlider;
-export type BackProps = { c: number; l: number; count: number; backRef: React.MutableRefObject<SVGPathElement> };

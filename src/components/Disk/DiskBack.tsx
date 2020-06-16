@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 import * as d3 from 'd3';
-import { BackProps, TAU } from './DiskSlider';
+import { TAU } from './common';
 import './DiskSlider.scss';
-
+export type BackProps = { c: number; l: number; count: number; backRef: React.MutableRefObject<SVGPathElement> };
 export const DiskBack = ({ c, l, count, backRef }: BackProps) => {
   const { floor: flr, random: rnd } = Math;
   const idKey = useRef(
@@ -26,7 +26,7 @@ export const DiskBack = ({ c, l, count, backRef }: BackProps) => {
     }>()
     .innerRadius(0.55)
     .outerRadius(0.85)
-    .startAngle(({ i }) => i * (TAU / count) - 0.1)
+    .startAngle(({ i }) => i * (TAU / count) - 0.01)
     .endAngle(({ i }) => (i + 1) * (TAU / count));
 
   return (

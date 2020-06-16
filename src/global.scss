@@ -1,9 +1,10 @@
 :root {
   --dark-border: #f0f0f0;
   --light-border: #2d2d2d;
+  font-family: 'Quicksand', 'Fira Code';
+  --bg-col: #2c3137;
 }
 .dark {
-  --bg-col: #2c3137;
   --text-col: #fefefe;
   --bg-highlight: #666561;
   color: var(--text-col);
@@ -26,4 +27,23 @@ textarea {
 input[type='text'] {
   background-color: inherit;
   color: var(--text-col);
+}
+fieldset {
+  width: max-content;
+  padding: 0.5em 1em;
+  margin: 0.5em;
+  border-radius: 1em;
+  border-width: 0.1em;
+  border-style: solid;
+  border-color: var(--bg-highlight);
+}
+
+nav {
+  background-color: var(--bg-highlight);
+}
+main {
+  display: flex;
+}
+body {
+  background-color: var(--bg-col);
 }

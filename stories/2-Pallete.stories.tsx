@@ -5,6 +5,7 @@ import * as SL from '../src/components/Slider';
 import DS from '../src/components/Disk/DiskSlider';
 import { COL_PROPS } from '../src/types';
 import styled, { createGlobalStyle } from 'styled-components';
+import '@storybook/addon-console';
 import '../src/global.scss';
 import '../normalize.css';
 const DARK_MODE = true;

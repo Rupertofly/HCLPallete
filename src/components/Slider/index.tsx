@@ -131,10 +131,17 @@ export function Slider(props: SliderProps): ReactElement {
 
   return (
     <div
-      style={{ width: '4em', height: '16em', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      style={{ width: '4em', height: '16em', display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}
       onPointerMoveCapture={handleMove}
       onPointerUpCapture={handleEnd}>
-      <svg viewBox='0 0 64 256' style={svgStyles as any}>
+      <svg
+        viewBox='0 0 64 256'
+        style={svgStyles as any}
+        onTouchMove={(e) => {
+          e.preventDefault();
+
+          return false;
+        }}>
         <defs>
           <SliderGradient id={gradientID.current} max={max} min={min} type={props.type} {...gradientValues} />
           <mask id={maskID.current}>
