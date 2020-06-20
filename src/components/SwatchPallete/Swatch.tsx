@@ -14,7 +14,14 @@ interface Props {
   selectedColor?: string;
 }
 
-export function Swatch({ color, selected, selectedColor, location, details, dispatch }: Props): ReactElement {
+export function Swatch({
+  color,
+  selected,
+  selectedColor,
+  location,
+  details,
+  dispatch,
+}: Props): ReactElement {
   const svgProps = {
     viewbox: '0 0 1 1',
   };
@@ -38,7 +45,8 @@ export function Swatch({ color, selected, selectedColor, location, details, disp
       onClick={() => {
         if (selected) dispatch(S.selectColour({ hue: -1, shade: -1 }));
         else dispatch(S.selectColour(location));
-      }}>
+      }}
+    >
       {details ? (
         <>
           <span
@@ -47,7 +55,8 @@ export function Swatch({ color, selected, selectedColor, location, details, disp
               top: '0.1em',
               fontSize: '0.8em',
               color: selectedColor ?? 'white',
-            }}>
+            }}
+          >
             {ll.toFixed(2)} {WCAG.score(ll)}
           </span>
           <span
@@ -59,7 +68,8 @@ export function Swatch({ color, selected, selectedColor, location, details, disp
               fontSize: '0.6em',
               textAlign: 'right',
               color: !color.light ? 'white' : 'black',
-            }}>
+            }}
+          >
             {color.name}
           </span>{' '}
         </>

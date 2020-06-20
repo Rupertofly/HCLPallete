@@ -24,7 +24,12 @@ export type ActionSetColour = ReturnType<typeof setColour>;
 
 // Set Value
 type valueType = 'h' | 'c' | 'l';
-export function setValue(opts: { hue: number; shade: number; property: valueType; value: number }) {
+export function setValue(opts: {
+  hue: number;
+  shade: number;
+  property: valueType;
+  value: number;
+}) {
   return {
     actionType: 'COLOUR',
     action: {

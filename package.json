@@ -65,7 +65,8 @@
     "singleQuote": true,
     "tabWidth": 2,
     "jsxSingleQuote": true,
-    "jsxBracketSameLine": true,
-    "printWidth": 120
+    "jsxBracketSameLine": false,
+    "printWidth": 80,
+    "arrowParens": "always"
   }
 }

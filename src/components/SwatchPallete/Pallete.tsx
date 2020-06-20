@@ -42,7 +42,10 @@ export function Pallete({ st, dispatch }: Props) {
   const detBox = React.useRef<HTMLInputElement>();
   const [details, setDetails] = React.useState(!!detBox.current?.checked);
   const selected = st.selected;
-  const selectedColour = st.selected[0] > -1 ? st.colours[st.selected[0]][st.selected[1]].hex : '#ffffff';
+  const selectedColour =
+    st.selected[0] > -1
+      ? st.colours[st.selected[0]][st.selected[1]].hex
+      : '#ffffff';
 
   React.useEffect(() => dispatch(S.selectColour({ hue: -1, shade: -1 })), []);
 
@@ -51,18 +54,32 @@ export function Pallete({ st, dispatch }: Props) {
       <tbody>
         <tr>
           <td style={{ fontSize: '0.8em' }}>
-            <input ref={detBox} type='checkbox' name='details' onChange={(e) => setDetails(e.currentTarget.checked)} />
+            <input
+              ref={detBox}
+              type='checkbox'
+              name='details'
+              onChange={(e) => setDetails(e.currentTarget.checked)}
+            />
             Details
           </td>
           {st.shades.map((sh, i) => {
-            return <PH info={st.shades[i]} index={i} LayerLength={st.shades.length} dispatch={dispatch} key={i} />;
+            return (
+              <PH
+                info={st.shades[i]}
+                index={i}
+                LayerLength={st.shades.length}
+                dispatch={dispatch}
+                key={i}
+              />
+            );
           })}
           <td>
             <HB
               onClick={(e) => {
                 dispatch(S.addLayer('shade'));
               }}
-              style={{ verticalAlign: 'middle', fontSize: '1.5em' }}>
+              style={{ verticalAlign: 'middle', fontSize: '1.5em' }}
+            >
               +
             </HB>
           </td>
@@ -76,7 +93,10 @@ export function Pallete({ st, dispatch }: Props) {
                 LayerLength={st.hues.length}
                 dispatch={dispatch}
                 style={{
-                  backgroundColor: hueIndex === selected[0] ? 'var(--bg-highlight)' : 'transparent',
+                  backgroundColor:
+                    hueIndex === selected[0]
+                      ? 'var(--bg-highlight)'
+                      : 'transparent',
 
                   transition: 'background-color 233ms',
                 }}
@@ -87,18 +107,24 @@ export function Pallete({ st, dispatch }: Props) {
                     key={shadeIndex}
                     style={{
                       backgroundColor:
-                        hueIndex === selected[0] || shadeIndex === selected[1] ? 'var(--bg-highlight)' : 'transparent',
+                        hueIndex === selected[0] || shadeIndex === selected[1]
+                          ? 'var(--bg-highlight)'
+                          : 'transparent',
 
                       transition: 'background-color 233ms',
                       textAlign: 'center',
-                    }}>
+                    }}
+                  >
                     <Swatch
                       key={shadeIndex}
                       color={col}
                       details={details}
                       selectedColor={selectedColour}
                       location={{ hue: hueIndex, shade: shadeIndex }}
-                      selected={hueIndex === selected.hue && shadeIndex === selected.shade}
+                      selected={
+                        hueIndex === selected.hue &&
+                        shadeIndex === selected.shade
+                      }
                       dispatch={dispatch}
                     />
                   </td>
@@ -112,7 +138,8 @@ export function Pallete({ st, dispatch }: Props) {
             onClick={(e) => {
               dispatch(S.addLayer('hue'));
             }}
-            style={{ verticalAlign: 'middle', fontSize: '1.5em' }}>
+            style={{ verticalAlign: 'middle', fontSize: '1.5em' }}
+          >
             +
           </HB>
         </tr>

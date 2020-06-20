@@ -10,7 +10,11 @@ const toDeg = (n) => n * (360 / TAU);
 type nDimensionalArray<T> = Array<T | nDimensionalArray<T>>;
 type iteratorFunc<T> = (iter: T, index: number, arr: nDimensionalArray<T>) => T;
 
-function replaceAt<T>(array: T[], index: number, iteree: (value: T, i: number, arr: T[]) => T): T[] {
+function replaceAt<T>(
+  array: T[],
+  index: number,
+  iteree: (value: T, i: number, arr: T[]) => T
+): T[] {
   const newArray = array.slice(0);
 
   newArray[index] = iteree(array[index], index, array);
@@ -31,7 +35,9 @@ function nDimensionalReplaceAt<T, U extends nDimensionalArray<T>>(
     } else {
       return indexes[depth] === '_'
         ? s.map((v, i) => recurse(v as U, depth + 1))
-        : replaceAt(s, indexes[depth] as number, (arr) => recurse(arr as U, depth + 1));
+        : replaceAt(s, indexes[depth] as number, (arr) =>
+            recurse(arr as U, depth + 1)
+          );
     }
   };
 
@@ -47,7 +53,12 @@ function circularMean(angles: number[]) {
 }
 function calculateColour(col: string, id?: string): Colour;
 function calculateColour(h: number, c: number, l: number, id?: string): Colour;
-function calculateColour(a: string | number, b?: number | string, cc?: number, id?: string) {
+function calculateColour(
+  a: string | number,
+  b?: number | string,
+  cc?: number,
+  id?: string
+) {
   let color: d3.HCLColor;
 
   id = id ?? uniqueId('col-');
@@ -80,38 +91,55 @@ function calculateColour(a: string | number, b?: number | string, cc?: number, i
 // Colour Handlers
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
-export function handleSetVal(oldState: State, { options }: Actions.ActionSetValue['action']): State {
+export function handleSetVal(
+  oldState: State,
+  { options }: Actions.ActionSetValue['action']
+): State {
   const newState: State = {
     ...oldState,
-    colours: nDimensionalReplaceAt(oldState.colours, [options.hue, options.shade], (v: Colour) => {
-      const newCol = { ...v };
+    colours: nDimensionalReplaceAt(
+      oldState.colours,
+      [options.hue, options.shade],
+      (v: Colour) => {
+        const newCol = { ...v };
 
-      newCol[options.property] = options.value;
-      const { h, c, l, id } = newCol;
+        newCol[options.property] = options.value;
+        const { h, c, l, id } = newCol;
 
-      return calculateColour(h, c, l, id);
-    }),
+        return calculateColour(h, c, l, id);
+      }
+    ),
   };
 
   return newState;
 }
 
-export function handleSetColour(oldState: State, { options }: Actions.ActionSetColour['action']): State {
+export function handleSetColour(
+  oldState: State,
+  { options }: Actions.ActionSetColour['action']
+): State {
   const newState: State = {
     ...oldState,
-    colours: nDimensionalReplaceAt(oldState.colours, [options.hue, options.shade], (v: Colour) => {
-      if (typeof options.color === 'string') {
-        return calculateColour(options.color, v.id);
-      } else {
-        const { h, c, l } = options.color;
+    colours: nDimensionalReplaceAt(
+      oldState.colours,
+      [options.hue, options.shade],
+      (v: Colour) => {
+        if (typeof options.color === 'string') {
+          return calculateColour(options.color, v.id);
+        } else {
+          const { h, c, l } = options.color;
 
-        return calculateColour(h, c, l, v.id);
+          return calculateColour(h, c, l, v.id);
+        }
       }
-    }),
+    ),
   };
 
   return handleCalculateLayer(
-    handleCalculateLayer(newState, Actions.calculateLayer('shade', options.shade).action),
+    handleCalculateLayer(
+      newState,
+      Actions.calculateLayer('shade', options.shade).action
+    ),
     Actions.calculateLayer('hue', options.hue).action
   );
 }
@@ -171,11 +199,20 @@ function handleAddHueLayer(oldState: State, name: string): State {
 function handleAddShadeLayer(oldState: State, name: string): State {
   return {
     ...oldState,
-    shades: [...oldState.shades, { name, avgValue: 45, id: uniqueId('shade-') }],
-    colours: oldState.colours.map((hue, hi) => [...hue, calculateColour(oldState.hues[hi].avgHue, 45, 45)]),
+    shades: [
+      ...oldState.shades,
+      { name, avgValue: 45, id: uniqueId('shade-') },
+    ],
+    colours: oldState.colours.map((hue, hi) => [
+      ...hue,
+      calculateColour(oldState.hues[hi].avgHue, 45, 45),
+    ]),
   };
 }
-export function handleAddLayer(oldState: State, { options }: Actions.ActionAddLayer['action']): State {
+export function handleAddLayer(
+  oldState: State,
+  { options }: Actions.ActionAddLayer['action']
+): State {
   switch (options.type) {
     case 'hue':
       return handleAddHueLayer(oldState, uniqueId('hueName'));
@@ -183,7 +220,10 @@ export function handleAddLayer(oldState: State, { options }: Actions.ActionAddLa
       return handleAddShadeLayer(oldState, uniqueId('shadeName'));
   }
 }
-export function handleRemoveLayer(oldState: State, { options }: Actions.ActionRemoveLayer['action']): State {
+export function handleRemoveLayer(
+  oldState: State,
+  { options }: Actions.ActionRemoveLayer['action']
+): State {
   switch (options.type) {
     case 'hue':
       return {
@@ -197,7 +237,9 @@ export function handleRemoveLayer(oldState: State, { options }: Actions.ActionRe
         ...oldState,
         selected: { hue: -1, shade: -1 },
         shades: oldState.shades.filter((v, i) => i !== options.index),
-        colours: oldState.colours.map((v) => v.filter((b, i) => i !== options.index)),
+        colours: oldState.colours.map((v) =>
+          v.filter((b, i) => i !== options.index)
+        ),
       };
     default:
       return oldState;
@@ -212,7 +254,10 @@ function swapIndex<T>(source: T[], from: number, to: number): T[] {
 
   return newArr;
 }
-export function handleRearrangeLayer(oldState: State, { options }: Actions.ActionRearrangeLayer['action']): State {
+export function handleRearrangeLayer(
+  oldState: State,
+  { options }: Actions.ActionRearrangeLayer['action']
+): State {
   switch (options.type) {
     case 'hue':
       return {
@@ -224,27 +269,44 @@ export function handleRearrangeLayer(oldState: State, { options }: Actions.Actio
       return {
         ...oldState,
         shades: swapIndex(oldState.shades, options.from, options.to),
-        colours: oldState.colours.map((h) => swapIndex(h, options.from, options.to)),
+        colours: oldState.colours.map((h) =>
+          swapIndex(h, options.from, options.to)
+        ),
       };
     default:
       return oldState;
   }
 }
 
-export function handleRenameLayer(oldState: State, { options }: Actions.ActionRenameLayer['action']): State {
+export function handleRenameLayer(
+  oldState: State,
+  { options }: Actions.ActionRenameLayer['action']
+): State {
   switch (options.type) {
     case 'hue':
-      return { ...oldState, hues: replaceAt(oldState.hues, options.index, (h) => ({ ...h, name: options.newName })) };
+      return {
+        ...oldState,
+        hues: replaceAt(oldState.hues, options.index, (h) => ({
+          ...h,
+          name: options.newName,
+        })),
+      };
     case 'shade':
       return {
         ...oldState,
-        shades: replaceAt(oldState.shades, options.index, (h) => ({ ...h, name: options.newName })),
+        shades: replaceAt(oldState.shades, options.index, (h) => ({
+          ...h,
+          name: options.newName,
+        })),
       };
     default:
       return oldState;
   }
 }
-export function handleCalculateLayer(oldState: State, { options }: Actions.ActionCalculateLayer['action']): State {
+export function handleCalculateLayer(
+  oldState: State,
+  { options }: Actions.ActionCalculateLayer['action']
+): State {
   switch (options.type) {
     case 'hue':
       return {
@@ -259,7 +321,9 @@ export function handleCalculateLayer(oldState: State, { options }: Actions.Actio
         ...oldState,
         shades: replaceAt(oldState.shades, options.index, (v) => ({
           ...v,
-          avgValue: circularMean(oldState.colours.map((b) => b[options.index].l)),
+          avgValue: circularMean(
+            oldState.colours.map((b) => b[options.index].l)
+          ),
         })),
       };
     default:
@@ -273,7 +337,11 @@ function calculateAverages(state: State) {
     ...state.hues.map((v, i) => ['hue', i] as const),
     ...state.shades.map((v, i) => ['shade', i] as const),
   ].reduce(
-    (runningState, action) => handleCalculateLayer(runningState, Actions.calculateLayer(action[0], action[1]).action),
+    (runningState, action) =>
+      handleCalculateLayer(
+        runningState,
+        Actions.calculateLayer(action[0], action[1]).action
+      ),
     state
   );
 }
@@ -282,9 +350,19 @@ function parseImportedPallete(importedPallete: PalleteImport): State {
     selected: { hue: -1, shade: -1 },
     drag: false,
     name: importedPallete.name,
-    colours: importedPallete.colours.map((hu) => hu.map((cl) => calculateColour(cl.h, cl.c, cl.l))),
-    shades: importedPallete.shades.map((v) => ({ avgValue: 50, id: uniqueId('shade-'), name: v })),
-    hues: importedPallete.hues.map((v) => ({ avgHue: 50, id: uniqueId('hue-'), name: v })),
+    colours: importedPallete.colours.map((hu) =>
+      hu.map((cl) => calculateColour(cl.h, cl.c, cl.l))
+    ),
+    shades: importedPallete.shades.map((v) => ({
+      avgValue: 50,
+      id: uniqueId('shade-'),
+      name: v,
+    })),
+    hues: importedPallete.hues.map((v) => ({
+      avgHue: 50,
+      id: uniqueId('hue-'),
+      name: v,
+    })),
   };
 
   return calculateAverages(newState);
@@ -300,7 +378,10 @@ function stringifyState(state: State): string {
   return JSON.stringify(output);
 }
 
-export function handleLoadPallete(oldState: State, { options }: Actions.ActionLoadPallete['action']): State {
+export function handleLoadPallete(
+  oldState: State,
+  { options }: Actions.ActionLoadPallete['action']
+): State {
   const dataString = localStorage.getItem(options.name);
 
   if (!dataString) return oldState;
@@ -308,7 +389,10 @@ export function handleLoadPallete(oldState: State, { options }: Actions.ActionLo
   return parseImportedPallete(JSON.parse(dataString));
 }
 
-export function handleSavePallete(oldState: State, { options }: Actions.ActionSavePallete['action']): State {
+export function handleSavePallete(
+  oldState: State,
+  { options }: Actions.ActionSavePallete['action']
+): State {
   const saveString = stringifyState(oldState);
 
   localStorage.setItem(oldState.name, saveString);
@@ -316,24 +400,41 @@ export function handleSavePallete(oldState: State, { options }: Actions.ActionSa
   return oldState;
 }
 
-export function handleRenamePallete(oldState: State, { options }: Actions.ActionRenamePallete['action']): State {
+export function handleRenamePallete(
+  oldState: State,
+  { options }: Actions.ActionRenamePallete['action']
+): State {
   return { ...oldState, name: options.newName };
 }
 
-export function handleImportPallete(oldState: State, { options }: Actions.ActionImportPallete['action']): State {
+export function handleImportPallete(
+  oldState: State,
+  { options }: Actions.ActionImportPallete['action']
+): State {
   const newState = parseImportedPallete(options.toImport);
 
   return newState;
 }
-export function handleRebuildPallete(oldState: State, { options }: Actions.ActionRebuildPallete['action']): State {
+export function handleRebuildPallete(
+  oldState: State,
+  { options }: Actions.ActionRebuildPallete['action']
+): State {
   return calculateAverages({
     ...oldState,
-    colours: nDimensionalReplaceAt(oldState.colours, ['_', '_'], (c: Colour) => calculateColour(c.hex, c.id)),
+    colours: nDimensionalReplaceAt(oldState.colours, ['_', '_'], (c: Colour) =>
+      calculateColour(c.hex, c.id)
+    ),
   });
 }
-export function handleSelectColour(oldState: State, { options }: Actions.ActionSelectColour['action']): State {
+export function handleSelectColour(
+  oldState: State,
+  { options }: Actions.ActionSelectColour['action']
+): State {
   return { ...oldState, selected: options.location };
 }
-export function handleDrag(oldState: State, { options }: Actions.ActionDrag['action']): State {
+export function handleDrag(
+  oldState: State,
+  { options }: Actions.ActionDrag['action']
+): State {
   return { ...oldState, drag: options.isDragging };
 }
