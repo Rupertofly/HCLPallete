@@ -188,14 +188,14 @@ export function handleRemoveLayer(oldState: State, { options }: Actions.ActionRe
     case 'hue':
       return {
         ...oldState,
-        selected: [-1, -1],
+        selected: { hue: -1, shade: -1 },
         hues: oldState.hues.filter((v, i) => i !== options.index),
         colours: oldState.colours.filter((v, i) => i !== options.index),
       };
     case 'shade':
       return {
         ...oldState,
-        selected: [-1, -1],
+        selected: { hue: -1, shade: -1 },
         shades: oldState.shades.filter((v, i) => i !== options.index),
         colours: oldState.colours.map((v) => v.filter((b, i) => i !== options.index)),
       };
@@ -279,7 +279,7 @@ function calculateAverages(state: State) {
 }
 function parseImportedPallete(importedPallete: PalleteImport): State {
   const newState: State = {
-    selected: [-1, -1],
+    selected: { hue: -1, shade: -1 },
     drag: false,
     name: importedPallete.name,
     colours: importedPallete.colours.map((hu) => hu.map((cl) => calculateColour(cl.h, cl.c, cl.l))),

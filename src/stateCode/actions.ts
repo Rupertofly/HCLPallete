@@ -202,7 +202,7 @@ export function rebuildPallete() {
 }
 export type ActionRebuildPallete = ReturnType<typeof rebuildPallete>;
 // Select Colour
-export function selectColour(location: [number, number]) {
+export function selectColour(location: { hue: number; shade: number }) {
   return {
     actionType: 'GLOBAL',
     action: {

@@ -6,7 +6,7 @@ import * as WCAG from 'wcag-contrast';
 import { hcl } from 'd3';
 
 interface Props {
-  location: [number, number];
+  location: { hue: number; shade: number };
   color: S.Colour;
   selected: boolean;
   dispatch: React.Dispatch<S.Actions>;
@@ -36,7 +36,7 @@ export function Swatch({ color, selected, selectedColor, location, details, disp
       }
       className={'swatch'}
       onClick={() => {
-        if (selected) dispatch(S.selectColour([-1, -1]));
+        if (selected) dispatch(S.selectColour({ hue: -1, shade: -1 }));
         else dispatch(S.selectColour(location));
       }}>
       {details ? (

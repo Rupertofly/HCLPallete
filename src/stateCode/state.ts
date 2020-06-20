@@ -34,7 +34,7 @@ export interface PalleteImport {
 }
 export const defaultState = {
   name: 'defaultPallete' as string,
-  selected: [-1, -1] as [number, number],
+  selected: { hue: -1, shade: -1 } as { hue: number; shade: number },
   drag: false,
   hues: [
     { id: uID('hue-'), name: 'Pinks', avgHue: 8.0 },

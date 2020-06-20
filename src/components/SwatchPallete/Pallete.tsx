@@ -44,7 +44,7 @@ export function Pallete({ st, dispatch }: Props) {
   const selected = st.selected;
   const selectedColour = st.selected[0] > -1 ? st.colours[st.selected[0]][st.selected[1]].hex : '#ffffff';
 
-  React.useEffect(() => dispatch(S.selectColour([-1, -1])), []);
+  React.useEffect(() => dispatch(S.selectColour({ hue: -1, shade: -1 })), []);
 
   return (
     <table style={{ borderSpacing: 0, fontFamily: 'fira code' }}>
@@ -97,8 +97,8 @@ export function Pallete({ st, dispatch }: Props) {
                       color={col}
                       details={details}
                       selectedColor={selectedColour}
-                      location={[hueIndex, shadeIndex]}
-                      selected={hueIndex === selected[0] && shadeIndex === selected[1]}
+                      location={{ hue: hueIndex, shade: shadeIndex }}
+                      selected={hueIndex === selected.hue && shadeIndex === selected.shade}
                       dispatch={dispatch}
                     />
                   </td>
