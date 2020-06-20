@@ -13,7 +13,16 @@ export const App = (props: Props) => {
   const selShade = state.selected[0] < 0 ? 2 : state.selected[1];
 
   const lSliders = state.colours[selHue].map((cl, i) => {
-    return <SL.Slider {...cl} dispatch={dispatch} drag={state.drag} type={'l'} loc={[selHue, i]} key={i} />;
+    return (
+      <SL.Slider
+        {...cl}
+        dispatch={dispatch}
+        drag={state.drag}
+        type={'l'}
+        loc={{ hue: selHue, shade: i }}
+        key={i}
+      />
+    );
   });
 
   return (
@@ -22,7 +31,10 @@ export const App = (props: Props) => {
         <div id='pallete'>
           <Pal.Pallete dispatch={dispatch} st={state} />
         </div>
-        <div id='input-sliders' style={{ display: 'flex', flexDirection: 'column' }}>
+        <div
+          id='input-sliders'
+          style={{ display: 'flex', flexDirection: 'column' }}
+        >
           <fieldset style={{}}>
             <legend>Hue - {state.hues[selHue].name}</legend>
             {hueSet(state, selHue, dispatch)}
@@ -30,7 +42,16 @@ export const App = (props: Props) => {
           <fieldset style={{}}>
             <legend>Chroma - {state.hues[selHue].name}</legend>
             {state.colours[selHue].map((cl, i) => {
-              return <SL.Slider {...cl} dispatch={dispatch} drag={state.drag} type={'c'} loc={[selHue, i]} key={i} />;
+              return (
+                <SL.Slider
+                  {...cl}
+                  dispatch={dispatch}
+                  drag={state.drag}
+                  type={'c'}
+                  loc={{ hue: selHue, shade: i }}
+                  key={i}
+                />
+              );
             })}
           </fieldset>
           <fieldset style={{}}>
@@ -38,7 +59,10 @@ export const App = (props: Props) => {
             {lSliders}
           </fieldset>
         </div>
-        <div id='hue-sliders' style={{ display: 'flex', flexDirection: 'column' }}>
+        <div
+          id='hue-sliders'
+          style={{ display: 'flex', flexDirection: 'column' }}
+        >
           <fieldset style={{}}>
             <legend>Hue - {state.shades[selShade].name}</legend>
             {state.colours.map((cl, i) => {
@@ -48,7 +72,7 @@ export const App = (props: Props) => {
                   dispatch={dispatch}
                   drag={state.drag}
                   type={'h'}
-                  loc={[i, selShade]}
+                  loc={{ hue: i, shade: selShade }}
                   key={i}
                 />
               );
@@ -63,7 +87,7 @@ export const App = (props: Props) => {
                   dispatch={dispatch}
                   drag={state.drag}
                   type={'c'}
-                  loc={[i, selShade]}
+                  loc={{ hue: i, shade: selShade }}
                   key={i}
                 />
               );
@@ -71,7 +95,7 @@ export const App = (props: Props) => {
           </fieldset>
           <fieldset style={{}}>
             <legend>Lightness - {state.shades[selShade].name}</legend>
-            {sliderSet(state, selShade, dispatch)}
+            {sliderSet(state, dispatch)}
           </fieldset>
         </div>
       </main>
@@ -83,7 +107,7 @@ export default App;
 function hueSet(
   state: {
     name: string;
-    selected: [number, number];
+    selected: { hue: number; shade: number };
     drag: boolean;
     hues: S.HueInfo[];
     shades: S.ShadeInfo[];
@@ -99,7 +123,7 @@ function hueSet(
         dispatch={dispatch}
         drag={state.drag}
         type={'h'}
-        loc={[selHue, i]}
+        loc={{ hue: selHue, shade: i }}
         key={i}
         fine
         fineCenter={state.hues[selHue].avgHue}
@@ -112,7 +136,7 @@ function hueSet(
 function sliderSet(
   state: {
     name: string;
-    selected: [number, number];
+    selected: { hue: number; shade: number };
     drag: boolean;
     hues: S.HueInfo[];
     shades: S.ShadeInfo[];
@@ -124,6 +148,15 @@ function sliderSet(
   const selSh = state.selected[0] < 0 ? 2 : state.selected[1];
 
   return state.colours.map((cl, i) => {
-    return <SL.Slider {...cl[selSh]} dispatch={dispatch} drag={state.drag} type={'l'} loc={[i, selSh]} key={i} />;
+    return (
+      <SL.Slider
+        {...cl[selSh]}
+        dispatch={dispatch}
+        drag={state.drag}
+        type={'l'}
+        loc={{ hue: i, shade: selSh }}
+        key={i}
+      />
+    );
   });
 }

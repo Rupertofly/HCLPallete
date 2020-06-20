@@ -7,7 +7,7 @@ import { SliderHandle } from './SliderHandle';
 import SliderMarker from './SliderMarker';
 export interface BaseSliderProps extends S.Colour {
   type: S.ColourProperties;
-  loc: [number, number];
+  loc: { hue: number; shade: number };
   dispatch: React.Dispatch<S.Actions>;
   drag: boolean;
 }
@@ -49,7 +49,7 @@ export function Slider(props: SliderProps): ReactElement {
   const gradientID = useRef(uniqueId('grad-'));
   const maskID = useRef(uniqueId('mask-'));
   const mask = `url(#${maskID.current})`;
-  const [hue, shade] = props.loc;
+  const { hue, shade } = props.loc;
   const borderCol = props.light ? '#373737' : '#f0f0f0';
 
   const inputSpaceRef = useRef<SVGRectElement>();
@@ -95,18 +95,29 @@ export function Slider(props: SliderProps): ReactElement {
   const minMaxRef = React.useRef(extent);
 
   minMaxRef.current = extent;
-  const [dragState, setDrag] = useState({ touched: false, startingPos: 0, startingVal: -1 });
+  const [dragState, setDrag] = useState({
+    touched: false,
+    startingPos: 0,
+    startingVal: -1,
+  });
   const handleStart = (e: React.PointerEvent<any>) => {
     if (dragState.touched) {
       return;
     }
     e.preventDefault();
     const inputBounds = inputSpaceRef.current.getBoundingClientRect();
-    const scaledPosition = 1 - (e.clientY - inputBounds.top) / (inputBounds.bottom - inputBounds.top);
-    const DragStartPosition = scaledPosition > 0 ? (scaledPosition > 1 ? 1 : scaledPosition) : 0;
+    const scaledPosition =
+      1 -
+      (e.clientY - inputBounds.top) / (inputBounds.bottom - inputBounds.top);
+    const DragStartPosition =
+      scaledPosition > 0 ? (scaledPosition > 1 ? 1 : scaledPosition) : 0;
 
     props.dispatch(S.drag(true));
-    setDrag((s) => ({ touched: true, startingPos: DragStartPosition, startingVal: value }));
+    setDrag((s) => ({
+      touched: true,
+      startingPos: DragStartPosition,
+      startingVal: value,
+    }));
   };
   const handleMove = (e: React.PointerEvent<any>) => {
     if (!dragState.touched) {
@@ -115,12 +126,26 @@ export function Slider(props: SliderProps): ReactElement {
 
     e.preventDefault();
     const inputBounds = inputSpaceRef.current.getBoundingClientRect();
-    const scaledPosition = 1 - (e.clientY - inputBounds.top) / (inputBounds.bottom - inputBounds.top);
-    const constrainedPosition = scaledPosition > 0 ? (scaledPosition > 1 ? 1 : scaledPosition) : 0;
+    const scaledPosition =
+      1 -
+      (e.clientY - inputBounds.top) / (inputBounds.bottom - inputBounds.top);
+    const constrainedPosition =
+      scaledPosition > 0 ? (scaledPosition > 1 ? 1 : scaledPosition) : 0;
     const currentOffset = constrainedPosition - dragState.startingPos;
-    const newValue = fromNormalised(toNormalised(dragState.startingVal, min, max) + currentOffset, min, max);
+    const newValue = fromNormalised(
+      toNormalised(dragState.startingVal, min, max) + currentOffset,
+      min,
+      max
+    );
 
-    props.dispatch(S.setValue({ hue: props.loc[0], shade: props.loc[1], property: props.type, value: newValue }));
+    props.dispatch(
+      S.setValue({
+        hue: props.loc[0],
+        shade: props.loc[1],
+        property: props.type,
+        value: newValue,
+      })
+    );
   };
   const handleEnd = (e: React.PointerEvent<any>) => {
     e.preventDefault();
@@ -131,9 +156,16 @@ export function Slider(props: SliderProps): ReactElement {
 
   return (
     <div
-      style={{ width: '4em', height: '16em', display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}
+      style={{
+        width: '4em',
+        height: '16em',
+        display: 'inline-flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
       onPointerMoveCapture={handleMove}
-      onPointerUpCapture={handleEnd}>
+      onPointerUpCapture={handleEnd}
+    >
       <svg
         viewBox='0 0 64 256'
         style={svgStyles as any}
@@ -141,11 +173,25 @@ export function Slider(props: SliderProps): ReactElement {
           e.preventDefault();
 
           return false;
-        }}>
+        }}
+      >
         <defs>
-          <SliderGradient id={gradientID.current} max={max} min={min} type={props.type} {...gradientValues} />
+          <SliderGradient
+            id={gradientID.current}
+            max={max}
+            min={min}
+            type={props.type}
+            {...gradientValues}
+          />
           <mask id={maskID.current}>
-            <rect x='4' y='4' width='56' height='248' rx='8' fill='white'></rect>
+            <rect
+              x='4'
+              y='4'
+              width='56'
+              height='248'
+              rx='8'
+              fill='white'
+            ></rect>
           </mask>
         </defs>
 
@@ -155,7 +201,10 @@ export function Slider(props: SliderProps): ReactElement {
           width='64'
           height='256'
           rx='12'
-          style={{ fill: 'var(--border)', transition: dragState.touched ? '' : 'fill 233ms' }}
+          style={{
+            fill: 'var(--border)',
+            transition: dragState.touched ? '' : 'fill 233ms',
+          }}
         />
         <rect
           x='4'
@@ -191,14 +240,28 @@ export function Slider(props: SliderProps): ReactElement {
           if (/Enter/.test(e.key)) {
             let n = Number.parseFloat(TextInputRef.current.value) ?? 0;
 
-            n = isHue ? (n < 0 ? 0 : n > 360 ? 360 : n) : n < min ? min : n > max ? max : n;
+            n = isHue
+              ? n < 0
+                ? 0
+                : n > 360
+                ? 360
+                : n
+              : n < min
+              ? min
+              : n > max
+              ? max
+              : n;
             TextInputRef.current.value = n.toFixed(1);
-            props.dispatch(S.setValue({ hue, shade, property: props.type, value: n }));
+            props.dispatch(
+              S.setValue({ hue, shade, property: props.type, value: n })
+            );
           }
         }}
         onBlur={(e) => {
           TextInputRef.current.value = value.toFixed(1);
-          props.dispatch(S.setValue({ hue, shade, property: props.type, value }));
+          props.dispatch(
+            S.setValue({ hue, shade, property: props.type, value })
+          );
         }}
         // onChange={(e) => {
         //     let n = +inp.current.value || 1;
