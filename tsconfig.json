@@ -13,8 +13,7 @@
     "experimentalDecorators": true,
     "lib": ["ESNext", "ES2019", "DOM", "es6"],
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "types": ["node", "dotenv"]
+    "resolveJsonModule": true
   },
   "typeAcquisition": { "enable": true },
   "exclude": ["node_modules", "test"],
