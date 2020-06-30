@@ -10,7 +10,6 @@ module.exports = {
   ],
   webpackFinal: async (config) => {
     // do mutation to the config
-    config.module.rules.push({});
     return config;
   },
 };

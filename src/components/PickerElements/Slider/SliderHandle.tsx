@@ -9,6 +9,8 @@ const CircFill = styled.circle`
     transform: scale(20);
     stroke-width: 0.25;
   }
+  filter: drop-shadow(0.2px 0.2px 0.3px #00000070)
+    drop-shadow(-0.2px -0.2px 0.3px #ffffff70);
 `;
 const CircBorder = styled.circle`
   transform: scale(18);
@@ -27,19 +29,26 @@ export interface SliderHandleProps {
   boundingBox: MutableRefObject<SVGRectElement>;
 }
 
-const SliderHandle = React.memo(function SliderHandle(props: SliderHandleProps): ReactElement {
+const SliderHandle = React.memo(function SliderHandle(
+  props: SliderHandleProps
+): ReactElement {
   return (
     <g
       style={{
         transform: `translate(32px, ${252 - 244 * props.value}px)`,
         transition: !props.instant ? 'transform 233ms' : 'none',
-      }}>
+      }}
+    >
       <CircFill
         r='1'
         onPointerDown={(e) => props.onDown(e)}
+        className='slide-handle'
         style={{
           fill: props.fill,
-          transition: props.instant ? '' : 'fill 233ms, ' + 'transform 233ms, stroke 233ms, stroke-width 233ms',
+          transition: props.instant
+            ? ''
+            : 'fill 233ms, ' +
+              'transform 233ms, stroke 233ms, stroke-width 233ms',
           cursor: 'pointer',
         }}
       />

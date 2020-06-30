@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import * as T from '../../types';
-import * as S from '../../stateCode';
+
+import * as S from '../../../stateCode';
 import Swatch from './Swatch';
 import styled from 'styled-components';
 import PH from './PalleteHeader';

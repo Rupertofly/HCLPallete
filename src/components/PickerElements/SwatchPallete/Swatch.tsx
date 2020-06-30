@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react';
-import { UICOLOURS } from '../../types';
 import * as S from '../../stateCode';
 import styled from 'styled-components';
 import * as WCAG from 'wcag-contrast';
@@ -37,7 +36,7 @@ export function Swatch({
       style={
         {
           '--fill': color.hex,
-          '--border': color.light ? UICOLOURS.DARK_COL : UICOLOURS.LIGHT_COL,
+          '--border': color.light ? '#000' : '#eee',
           ...css,
         } as any
       }

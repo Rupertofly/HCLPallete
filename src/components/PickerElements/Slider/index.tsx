@@ -204,6 +204,8 @@ export function Slider(props: SliderProps): ReactElement {
           style={{
             fill: 'var(--border)',
             transition: dragState.touched ? '' : 'fill 233ms',
+            filter:
+              'drop-shadow(0.8px 0.8px 0.3px #00000070) drop-shadow(-0.8px -0.8px 0.3px #ffffff70);',
           }}
         />
         <rect
@@ -213,7 +215,11 @@ export function Slider(props: SliderProps): ReactElement {
           height='248'
           mask={mask}
           ref={inputSpaceRef}
-          style={{ fill: `url('#${gradientID.current}')` }}
+          style={{
+            fill: `url('#${gradientID.current}')`,
+            filter:
+              'drop-shadow(0.8px 0.8px 0.3px #00000070) drop-shadow(-0.8px -0.8px 0.3px #ffffff70);',
+          }}
         />
         <SliderMarker
           key='Marker'
