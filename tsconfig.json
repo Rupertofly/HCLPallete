@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "outDir": "dist",
-    "rootDir": "src",
+    "baseUrl": "src",
     "target": "ES2018",
     "jsx": "react",
     "importHelpers": true,
@@ -13,9 +13,12 @@
     "experimentalDecorators": true,
     "lib": ["ESNext", "ES2019", "DOM", "es6"],
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "pick/*": ["components/PickerElements/*"],
+      "nav/*": ["components/NavElements/*"]
+    }
   },
-  "typeAcquisition": { "enable": true },
-  "exclude": ["node_modules", "test"],
-  "include": ["src/**/*.ts"]
+  "exclude": ["node_modules", "test", "**/node_modules/*"],
+  "include": ["src/**/*"]
 }

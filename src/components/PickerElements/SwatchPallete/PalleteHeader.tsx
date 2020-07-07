@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import * as S from '../../stateCode';
+import * as S from 'stateCode';
 
 const HueContainer = styled.div`
   display: grid;
@@ -55,7 +55,8 @@ const cStyle: React.CSSProperties = {};
 
 type HeadingInfo = S.HueInfo | S.ShadeInfo;
 
-export interface PalleteHeaderProps<T extends HeadingInfo> extends React.HTMLAttributes<HTMLTableHeaderCellElement> {
+export interface PalleteHeaderProps<T extends HeadingInfo>
+  extends React.HTMLAttributes<HTMLTableHeaderCellElement> {
   info: T;
   index: number;
   LayerLength: number;
@@ -84,8 +85,12 @@ const TextArea = styled.textarea.attrs((p) => ({
   }
 `;
 
-export function PalleteHeader<T extends HeadingInfo>(props: PalleteHeaderProps<T>) {
-  const clickHandle = (action: S.Actions) => (e: React.MouseEvent<HTMLButtonElement>) => {
+export function PalleteHeader<T extends HeadingInfo>(
+  props: PalleteHeaderProps<T>
+) {
+  const clickHandle = (action: S.Actions) => (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
     props.dispatch(action);
     e.currentTarget.blur();
   };
@@ -94,7 +99,9 @@ export function PalleteHeader<T extends HeadingInfo>(props: PalleteHeaderProps<T
 
   if (NameRef.current) NameRef.current.value = props.info.name;
   const up = clickHandle(S.rearrangeLayer(type, props.index, props.index - 1));
-  const down = clickHandle(S.rearrangeLayer(type, props.index, props.index + 1));
+  const down = clickHandle(
+    S.rearrangeLayer(type, props.index, props.index + 1)
+  );
   const NameLen = props.info.name.length;
   const textAreaProps = {
     style: cStyle,
@@ -103,7 +110,8 @@ export function PalleteHeader<T extends HeadingInfo>(props: PalleteHeaderProps<T
     rows: props.info.name.length < 10 ? 1 : Math.ceil(NameLen / 9),
     onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (/Backspace|Delete|Left|Right|^\s$|^\w$/.test(e.key)) {
-        e.currentTarget.rows = e.currentTarget.value.length < 10 ? 1 : Math.floor(NameLen / 6);
+        e.currentTarget.rows =
+          e.currentTarget.value.length < 10 ? 1 : Math.floor(NameLen / 6);
 
         return true;
       } else e.preventDefault();
@@ -121,7 +129,10 @@ export function PalleteHeader<T extends HeadingInfo>(props: PalleteHeaderProps<T
     return (
       <td>
         <HueContainer {...props} style={{}}>
-          <HeaderButton style={{ ...xStyle }} onClick={clickHandle(S.removeLayer('hue', props.index))}>
+          <HeaderButton
+            style={{ ...xStyle }}
+            onClick={clickHandle(S.removeLayer('hue', props.index))}
+          >
             ✗
           </HeaderButton>
           {props.index > 0 ? (
@@ -142,16 +153,25 @@ export function PalleteHeader<T extends HeadingInfo>(props: PalleteHeaderProps<T
     return (
       <td>
         <ShadeContainer {...props} style={{}}>
-          <HeaderButton style={{ ...xStyle }} onClick={clickHandle(S.removeLayer(type, props.index))}>
+          <HeaderButton
+            style={{ ...xStyle }}
+            onClick={clickHandle(S.removeLayer(type, props.index))}
+          >
             ✗
           </HeaderButton>
           {props.index < props.LayerLength - 1 && (
-            <HeaderButton onClick={down} style={{ ...uStyle, justifySelf: 'center' }}>
+            <HeaderButton
+              onClick={down}
+              style={{ ...uStyle, justifySelf: 'center' }}
+            >
               →
             </HeaderButton>
           )}
           {props.index > 0 && (
-            <HeaderButton onClick={up} style={{ ...dStyle, justifySelf: 'center' }}>
+            <HeaderButton
+              onClick={up}
+              style={{ ...dStyle, justifySelf: 'center' }}
+            >
               ←
             </HeaderButton>
           )}

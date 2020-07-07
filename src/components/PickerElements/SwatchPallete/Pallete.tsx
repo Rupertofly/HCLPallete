@@ -1,47 +1,22 @@
 import React, { memo } from 'react';
 
-import * as S from '../../../stateCode';
+import * as S from 'stateCode';
 import Swatch from './Swatch';
 import styled from 'styled-components';
 import PH from './PalleteHeader';
 import './Pallete.scss';
-const HB = styled.button`
-  border: 0;
-  font-size: 1.2em;
-  transform-origin: 50% 50%;
-  transform: scale(1);
-  background: 0;
-  cursor: pointer;
-  width: fit-content;
-  justify-self: end;
-  padding: 0.05em 0.2em;
-  margin-right: 0.2em;
-  margin-top: 0.2em;
-  font-weight: 400;
-  border-radius: 25%;
-  transition: transform 233ms, background-color 64ms;
-  background-color: transparent;
-  color: var(--text-col);
-  &:hover {
-    font-weight: 800;
-  }
-  &:active {
-    background-color: lightgray;
-  }
-  &:focus {
-    outline: none;
-  }
-`;
+import { dispatchContext } from 'App';
 
 interface Props {
   st: S.State;
   dispatch: React.Dispatch<S.Actions>;
 }
 // Comment
-export function Pallete({ st, dispatch }: Props) {
+export function Pallete({ st }: Props) {
   const detBox = React.useRef<HTMLInputElement>();
   const [details, setDetails] = React.useState(!!detBox.current?.checked);
   const selected = st.selected;
+  const dispatch = React.useContext(dispatchContext);
   const selectedColour =
     st.selected[0] > -1
       ? st.colours[st.selected[0]][st.selected[1]].hex
@@ -74,14 +49,14 @@ export function Pallete({ st, dispatch }: Props) {
             );
           })}
           <td>
-            <HB
+            <button
               onClick={(e) => {
                 dispatch(S.addLayer('shade'));
               }}
               style={{ verticalAlign: 'middle', fontSize: '1.5em' }}
             >
               +
-            </HB>
+            </button>
           </td>
         </tr>
         {st.colours.map((hue, hueIndex) => {
@@ -134,14 +109,14 @@ export function Pallete({ st, dispatch }: Props) {
           );
         })}
         <tr>
-          <HB
+          <button
             onClick={(e) => {
               dispatch(S.addLayer('hue'));
             }}
             style={{ verticalAlign: 'middle', fontSize: '1.5em' }}
           >
             +
-          </HB>
+          </button>
         </tr>
       </tbody>
     </table>

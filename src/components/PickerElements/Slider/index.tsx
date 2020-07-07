@@ -1,6 +1,6 @@
 import React, { ReactElement, useRef, useState } from 'react';
 import styled from 'styled-components';
-import * as S from '../../stateCode';
+import * as S from 'stateCode';
 import { uniqueId } from 'lodash';
 import { SliderGradient } from './SliderGradient';
 import { SliderHandle } from './SliderHandle';

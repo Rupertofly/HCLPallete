@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import * as S from '../../stateCode';
+import * as S from 'stateCode';
 import styled from 'styled-components';
 import * as WCAG from 'wcag-contrast';
 import { hcl } from 'd3';

@@ -1,8 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap');
 :root {
   --dark-border: #f0f0f0;
   --light-border: #2d2d2d;
   font-family: 'Quicksand', 'Fira Code';
   --bg-col: #2c3137;
+  --text-font: 'Quicksand', sans-serif;
+  --data-font: 'Fira Code', monospace;
 }
 .dark {
   --text-col: #fefefe;
@@ -22,6 +25,7 @@
 }
 textarea {
   color: var(--text-col);
+  font-family: var(--text-font);
   background-color: var(--bg-col);
 }
 input[type='text'] {
@@ -38,7 +42,7 @@ fieldset {
   border-color: var(--bg-highlight);
 }
 
-nav {
+header {
   background-color: var(--bg-highlight);
 }
 main {
