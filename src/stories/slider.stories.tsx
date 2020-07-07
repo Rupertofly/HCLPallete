@@ -1,5 +1,4 @@
-import { Slider } from '../src/components/Slider';
-import { reducer, defaultState } from '../src/stateCode';
+import { reducer, defaultState } from '../stateCode';
 import React, { useReducer } from 'react';
 export default {
   title: 'name',
@@ -10,12 +9,6 @@ export const story = () => {
   const col = state.colours[2][2];
 
   return (
-    <Slider
-      {...col}
-      dispatch={dispatch}
-      drag={state.drag}
-      loc={{ hue: 2, shade: 2 }}
-      type={'c'}
-    />
+
   );
 };

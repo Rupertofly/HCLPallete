@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react';
 import styled from 'styled-components';
-import * as t from '../../types';
 const { PI, cos, sin } = Math;
 const QTR = PI / 2;
 const TAU = 2 * PI;
@@ -16,7 +15,11 @@ export default function DiskMarker({ value, light }: Props): ReactElement {
 
   return (
     <g style={{ transform: `rotate(${value}deg)` }}>
-      <path className={`marker-line ${!light ? 'dark-stroke' : 'light-stroke'}`} d={`M0.7,0L0.85,0`} />;
+      <path
+        className={`marker-line ${!light ? 'dark-stroke' : 'light-stroke'}`}
+        d={`M0.7,0L0.85,0`}
+      />
+      ;
     </g>
   );
 }

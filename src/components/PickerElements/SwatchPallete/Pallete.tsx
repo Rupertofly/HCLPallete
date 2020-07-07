@@ -9,7 +9,6 @@ import { dispatchContext } from 'App';
 
 interface Props {
   st: S.State;
-  dispatch: React.Dispatch<S.Actions>;
 }
 // Comment
 export function Pallete({ st }: Props) {
@@ -109,14 +108,16 @@ export function Pallete({ st }: Props) {
           );
         })}
         <tr>
-          <button
-            onClick={(e) => {
-              dispatch(S.addLayer('hue'));
-            }}
-            style={{ verticalAlign: 'middle', fontSize: '1.5em' }}
-          >
-            +
-          </button>
+          <td style={{ textAlign: 'center' }}>
+            <button
+              onClick={(e) => {
+                dispatch(S.addLayer('hue'));
+              }}
+              style={{ verticalAlign: 'middle', fontSize: '1.5em' }}
+            >
+              +
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>

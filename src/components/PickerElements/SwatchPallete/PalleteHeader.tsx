@@ -11,7 +11,7 @@ const HueContainer = styled.div`
   font-family: 'Fira Code', monospace;
   color: var(--text-col);
 `;
-const ShadeContainer = styled.th`
+const ShadeContainer = styled.div`
   display: grid;
   grid-template:
     'close . .' 1fr
@@ -22,23 +22,22 @@ const ShadeContainer = styled.th`
 `;
 const HeaderButton = styled.button`
   border: 0;
-  font-size: 1.2em;
+  font-size: 20px;
   transform-origin: 50% 50%;
   transform: scale(1);
-  background: 0;
   cursor: pointer;
-  width: fit-content;
-  justify-self: end;
+  width: 1.2em;
   padding: 0.05em 0.2em;
   margin-right: 0.2em;
+  margin-left: 0.2em;
   margin-top: 0.2em;
-  font-weight: 400;
   border-radius: 25%;
   transition: transform 233ms, background-color 64ms;
   background-color: transparent;
   color: var(--text-col);
+  font-family: monospace;
   &:hover {
-    font-weight: 800;
+    background-color: var(--bg-highlight);
   }
   &:active {
     background-color: var(--bg-highlight);
@@ -127,7 +126,7 @@ export function PalleteHeader<T extends HeadingInfo>(
 
   if (type === 'hue')
     return (
-      <td>
+      <th>
         <HueContainer {...props} style={{}}>
           <HeaderButton
             style={{ ...xStyle }}
@@ -137,21 +136,21 @@ export function PalleteHeader<T extends HeadingInfo>(
           </HeaderButton>
           {props.index > 0 ? (
             <HeaderButton onClick={up} style={{ ...uStyle }}>
-              ↑
+              &uarr;
             </HeaderButton>
           ) : null}
           {props.index < props.LayerLength - 1 ? (
             <HeaderButton onClick={down} style={{ ...dStyle }}>
-              ↓
+              &darr;
             </HeaderButton>
           ) : null}
           <TextArea {...textAreaProps} />
         </HueContainer>
-      </td>
+      </th>
     );
   else
     return (
-      <td>
+      <th>
         <ShadeContainer {...props} style={{}}>
           <HeaderButton
             style={{ ...xStyle }}
@@ -164,7 +163,7 @@ export function PalleteHeader<T extends HeadingInfo>(
               onClick={down}
               style={{ ...uStyle, justifySelf: 'center' }}
             >
-              →
+              &rarr;
             </HeaderButton>
           )}
           {props.index > 0 && (
@@ -172,12 +171,12 @@ export function PalleteHeader<T extends HeadingInfo>(
               onClick={up}
               style={{ ...dStyle, justifySelf: 'center' }}
             >
-              ←
+              &larr;
             </HeaderButton>
           )}
           <TextArea {...textAreaProps} />
         </ShadeContainer>
-      </td>
+      </th>
     );
 }
 export default React.memo(PalleteHeader);

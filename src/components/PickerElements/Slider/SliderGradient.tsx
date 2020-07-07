@@ -1,8 +1,7 @@
 import React, { ReactElement } from 'react';
-import * as T from '../../types';
 import * as d3 from 'd3';
 import styled from 'styled-components';
-
+import * as S from 'stateCode';
 const DETAIL = 12;
 
 export interface SliderGradientProps {
@@ -10,7 +9,7 @@ export interface SliderGradientProps {
   secondProp: number;
   min: number;
   max: number;
-  type: T.HCLProp;
+  type: S.ColourProperties;
   id: string;
 }
 function degMod(t: number, min: number, max: number) {
@@ -39,7 +38,7 @@ function toNormalised(n: number, min: number, max: number) {
   return normalised > 0 ? (normalised < 1 ? normalised : 1) : 0;
 }
 function tupleFromRange(
-  type: T.HCLProp,
+  type: S.ColourProperties,
   range: number,
   p1: number,
   p2: number,
@@ -55,15 +54,30 @@ function tupleFromRange(
       return [p1, p2, fromNormalised(range, min, max)];
   }
 }
-export const SliderGradient = React.memo(function SliderGradient(props: SliderGradientProps) {
+export const SliderGradient = React.memo(function SliderGradient(
+  props: SliderGradientProps
+) {
   return (
     <linearGradient id={props.id} x1='0' x2='0' y1='1' y2='0'>
       {d3.range(DETAIL + 1).map((v) => {
         const col = d3.hcl(
-          ...tupleFromRange(props.type, v / DETAIL, props.firstProp, props.secondProp, props.min, props.max)
+          ...tupleFromRange(
+            props.type,
+            v / DETAIL,
+            props.firstProp,
+            props.secondProp,
+            props.min,
+            props.max
+          )
         );
 
-        return <stop offset={`${((v / DETAIL) * 100).toFixed(1)}%`} stopColor={col.hex()} key={v} />;
+        return (
+          <stop
+            offset={`${((v / DETAIL) * 100).toFixed(1)}%`}
+            stopColor={col.hex()}
+            key={v}
+          />
+        );
       })}
     </linearGradient>
   );

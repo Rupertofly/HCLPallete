@@ -1,6 +1,6 @@
 module.exports = {
   extend: [''],
-  stories: ['../stories/**/*.stories.[jt]s?(x)'],
+  stories: ['../src/stories/**/*.stories.[jt]s?(x)'],
   addons: [
     '@storybook/preset-scss',
     '@storybook/preset-typescript',

@@ -2,7 +2,7 @@
 :root {
   --dark-border: #f0f0f0;
   --light-border: #2d2d2d;
-  font-family: 'Quicksand', 'Fira Code';
+  // font-family: 'Quicksand', 'Fira Code';
   --bg-col: #2c3137;
   --text-font: 'Quicksand', sans-serif;
   --data-font: 'Fira Code', monospace;
@@ -43,11 +43,23 @@ fieldset {
 }
 
 header {
+  padding-left: 1em;
   background-color: var(--bg-highlight);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  & h1 {
+    align-self: center;
+  }
 }
 main {
   display: flex;
 }
 body {
   background-color: var(--bg-col);
+}
+button {
+  font-family: var(--data-font);
 }
