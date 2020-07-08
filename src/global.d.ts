@@ -17,5 +17,6 @@ declare global {
     };
   }
   type appDispatch = R.Dispatch<S.Actions>;
+  type colourProp = 'h' | 'c' | 'l';
 }
 export {};

@@ -136,12 +136,12 @@ export function PalleteHeader<T extends HeadingInfo>(
           </HeaderButton>
           {props.index > 0 ? (
             <HeaderButton onClick={up} style={{ ...uStyle }}>
-              &uarr;
+              ⬆︎
             </HeaderButton>
           ) : null}
           {props.index < props.LayerLength - 1 ? (
             <HeaderButton onClick={down} style={{ ...dStyle }}>
-              &darr;
+              ⬇︎
             </HeaderButton>
           ) : null}
           <TextArea {...textAreaProps} />
@@ -161,9 +161,13 @@ export function PalleteHeader<T extends HeadingInfo>(
           {props.index < props.LayerLength - 1 && (
             <HeaderButton
               onClick={down}
-              style={{ ...uStyle, justifySelf: 'center' }}
+              style={{
+                ...uStyle,
+                justifySelf: 'center',
+                transform: 'ScaleX(-1)',
+              }}
             >
-              &rarr;
+              ⬅︎
             </HeaderButton>
           )}
           {props.index > 0 && (
@@ -171,7 +175,7 @@ export function PalleteHeader<T extends HeadingInfo>(
               onClick={up}
               style={{ ...dStyle, justifySelf: 'center' }}
             >
-              &larr;
+              ⬅︎
             </HeaderButton>
           )}
           <TextArea {...textAreaProps} />

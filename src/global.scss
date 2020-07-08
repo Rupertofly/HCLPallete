@@ -45,7 +45,9 @@ fieldset {
 header {
   padding-left: 1em;
   background-color: var(--bg-highlight);
+  font-family: var(--text-font);
   display: flex;
+  width: 100%;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
@@ -55,11 +57,28 @@ header {
   }
 }
 main {
-  display: flex;
+  display: grid;
+  font-family: var(--text-font);
+  grid-template:
+    'pal-name pal-name' min-content
+    'pallete sliders' auto / minmax(min-content, 50%) auto;
+  @media screen and (max-width: 1200px) {
+    grid-template:
+      'pal-name' auto
+      'pallete' auto
+      'sliders' auto / max-content;
+  }
+  table {
+    grid-area: pallete;
+  }
+  h2 {
+    grid-area: pal-name;
+  }
 }
 body {
   background-color: var(--bg-col);
 }
 button {
   font-family: var(--data-font);
+  background-color: transparent;
 }
