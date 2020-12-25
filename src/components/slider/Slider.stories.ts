@@ -1,4 +1,4 @@
-import Slider from '../../../temp/Slider.svelte';
+import Slider from './Slider.svelte';
 export default {
   title: 'Slider',
 };

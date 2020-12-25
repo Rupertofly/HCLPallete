@@ -1,19 +1,19 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "es6",
     "outDir": "dist",
     "baseUrl": "src",
-    "target": "ES2018",
+    "target": "ES2015",
     "jsx": "react",
-    "importHelpers": true,
+    "importHelpers": false,
     "moduleResolution": "node",
-    "esModuleInterop": true,
-    "sourceMap": true,
+    "esModuleInterop": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": ["ESNext", "ES2019", "DOM", "es6"],
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
+    "strict": false,
     "paths": {
       "pick/*": ["components/PickerElements/*"],
       "nav/*": ["components/NavElements/*"]

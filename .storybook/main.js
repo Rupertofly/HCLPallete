@@ -1,21 +1,21 @@
-const svPre = require('svelte-preprocess');
+const sveltePreprocess = require('svelte-preprocess');
+const webpack = require('webpack');
 module.exports = {
   "stories": [
     "../src/**/*.stories.@(js|jsx|ts|tsx)"
   ],
   "addons": [
     "@storybook/addon-links",
-    "@storybook/addon-essentials"
+    { name: "@storybook/addon-essentials", options: { docs: false } }
   ],
+  /** @param {webpack.Configuration} config */
   webpackFinal: async (config) => {
-    const svelteLoader = config.module.rules.find(
-      (r) => r.loader && r.loader.includes("svelte-loader")
-    );
-    svelteLoader.options = {
-      ...svelteLoader.options,
-      preprocess: svPre(),
-    };
 
-    return config;
+    const cfgIndex = config.module.rules.findIndex(rule => /svelte-loader/.test(rule.loader))
+    config.module.rules[cfgIndex].options.preprocess = sveltePreprocess();
+    config.module.rules[cfgIndex].options.hotReload = false;
+    config.module.rules[cfgIndex].loader = 'svelte-loader'
+    config.target = 'web'
+    return config
   }
 }
