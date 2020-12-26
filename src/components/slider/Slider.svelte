@@ -4,6 +4,8 @@
   import { range } from 'd3';
   const bt = tri.buildTriangle;
   const bbt = tri.buildReverseTriangle;
+  import SliderBackground from './SliderBackground.svelte';
+
   let t = 0;
   onMount(() => {
     setInterval(() => {
@@ -18,9 +20,16 @@
     }
     return `M${points.join('L')}L1,4L0,4Z`;
   }
+  export let value = 3;
 </script>
 
-<svg viewBox="-0.35 -0.5 1.7 5" style="width: 6em;">
+<style>
+</style>
+
+<svg
+  viewBox="-0.35 -0.5 1.7 5"
+  style="width: 4em;--solid-fill:#f383a2;"
+  class:animateable>
   <rect
     width={1.125}
     height={4.125}
@@ -29,9 +38,10 @@
     x={-0.0625}
     y={-0.0625} />
   <rect width={1} height={4} style="fill:#ffffff;" rx={0.125} />
-  <g clip-path="url(#cl)">
+  <SliderBackground type="solid" {value} />
+  <!-- <g clip-path="url(#cl)">
     <use href="#wave" style="fill:green;transform: translate(-0px, 2px)" />
-  </g>
+  </g> -->
   <g style={`transform: translate(-0.31px, calc(4px - ${2}px));`}>
     <path
       d={bt(0.8, 0.08)}
