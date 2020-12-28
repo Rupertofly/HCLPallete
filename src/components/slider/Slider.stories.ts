@@ -4,6 +4,7 @@ export default {
   component: Slider,
   args: {
     value: 2,
+    hexColor: '#fee088',
   },
 };
 export const Slide = (args) => ({

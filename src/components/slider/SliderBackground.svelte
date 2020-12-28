@@ -1,11 +1,10 @@
 <script lang="ts">
   import { animate } from './store';
 
-  export let type: 'gradient' | 'solid' | 'spectrum' | 'wave';
+  export let type: 'solid' | 'spectrum' | 'wave';
 
   export let value: number = 3;
-  const animateable = $animate;
-  $: aniStyle = $animate ? 'transition: transform 233ms;' : '';
+  $: aniStyle = $animate ? 'transition: transform 233ms, fill 233ms;' : '';
   $: isPartial =
     type !== 'spectrum' ? `transform: translateY(${value}px);` : '';
 </script>
@@ -17,9 +16,9 @@
 </style>
 
 <g clip-path="url(#cl)" style="">
-  <rect
-    width={1}
-    height={4}
-    class:solid={type === 'solid'}
-    style="{isPartial}{aniStyle}" />
+  {#if type === 'wave'}
+    <use href="#wave" class="solid" style="{isPartial}{aniStyle}" />
+  {:else if type === 'solid'}
+    <rect width={1} height={4} class="solid" style="{isPartial}{aniStyle}" />
+  {/if}
 </g>

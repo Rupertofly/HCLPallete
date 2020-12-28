@@ -1,11 +1,11 @@
 const sveltePreprocess = require('svelte-preprocess');
 const webpack = require('webpack');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 module.exports = {
   "stories": [
     "../src/**/*.stories.@(js|jsx|ts|tsx)"
   ],
   "addons": [
-    "@storybook/addon-links", '@storybook/addon-controls',
     { name: "@storybook/addon-essentials", options: { docs: false } }
   ],
   /** @param {webpack.Configuration} config */
@@ -16,6 +16,11 @@ module.exports = {
     config.module.rules[cfgIndex].options.hotReload = false;
     config.module.rules[cfgIndex].loader = 'svelte-loader'
     config.target = 'web'
+    if (config.resolve.plugins) {
+      config.resolve.plugins.push(new TsconfigPathsPlugin());
+  } else {
+      config.resolve.plugins = [new TsconfigPathsPlugin()];
+  }
     return config
   }
 }
