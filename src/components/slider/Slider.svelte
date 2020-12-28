@@ -10,6 +10,7 @@
   import SliderBackground from './SliderBackground.svelte';
   import { animate } from './store';
   import { set } from 'lodash';
+  import SliderNotch from './SliderNotch.svelte';
   const noise = ns.makeNoise2D(Math.random());
   let svgElem: SVGSVGElement;
   let t = 0;
@@ -38,6 +39,7 @@
   export const hexColour: string = '#900000';
   export const property: ColourProperties = 'lightness';
   let mdown: boolean;
+  let elt = 0;
   let mouseOffset = [0, 0];
   let mId: number | null = null;
   let gElem: SVGGElement;
@@ -67,7 +69,7 @@
     // console.log(mx, my);
     if (my < bgRect.height && my > 0) {
       const v = my / bgRect.height;
-      t = v * 4;
+      t = (Math.round(v * 26) / 26) * 4;
       // console.log(v);
     }
   }
@@ -75,6 +77,7 @@
     mdown = false;
     svgElem.releasePointerCapture(event.pointerId);
     mId = null;
+    elt = t;
     $animate = true;
     console.log('end');
   }
@@ -101,13 +104,7 @@
     bind:this={bgElem} />
   <SliderBackground type="wave" value={t} />
   <SliderThumb {hexColour} value={t} on:pointerdown={pointerdown} bind:gElem />
-  <g style={`transform: translate(0.1px, 2.5px);`}>
-    <path
-      d={bbt(0.4, 0.05)}
-      stroke="#0f0f0f"
-      fill={hexColour}
-      stroke-width={0.0625} />
-  </g>
+  <SliderNotch {hexColour} value={elt} />
 </svg>
 
 <svg style="opacity:0;">

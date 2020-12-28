@@ -3,7 +3,6 @@
   import { animate } from './store';
   export let hexColour: string;
   export let value: number;
-  export let gElem: SVGGElement;
 </script>
 
 <style>
@@ -21,7 +20,6 @@
 </style>
 
 <g
-  bind:this={gElem}
   class:anim={$animate}
   style={`transform: translate(-0.31px, calc(4px - ${4 - value}px));`}
   on:pointerdown>

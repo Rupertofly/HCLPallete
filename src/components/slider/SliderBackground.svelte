@@ -16,7 +16,7 @@
 </style>
 
 <g clip-path="url(#cl)" style="">
-  {#if type === 'wave' && value < 3.9 && value > 0.1}
+  {#if type === 'wave' && value < 3.95 && value > 0.05}
     <use href="#wave" class="solid" style="{isPartial}{aniStyle}" />
   {:else}
     <rect width={1} height={4} class="solid" style="{isPartial}{aniStyle}" />
