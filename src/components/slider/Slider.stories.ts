@@ -1,4 +1,4 @@
-import Slider from './Slider.svelte';
+import Slider from './SliderDecorator.svelte';
 export default {
   title: 'Slider',
   component: Slider,

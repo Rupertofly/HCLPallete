@@ -19,6 +19,6 @@
       "nav/*": ["components/NavElements/*"]
     }
   },
-  "exclude": ["node_modules", "test", "**/node_modules/*"],
+  "exclude": ["node_modules", "test", "**/node_modules/*", "oldCode"],
   "extends": "@tsconfig/svelte/tsconfig.json"
 }

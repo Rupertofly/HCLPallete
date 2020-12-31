@@ -6,10 +6,9 @@ const { min, max } = Math;
 const deg2rad = Math.PI / 180;
 const rad2deg = 180 / Math.PI;
 const filter = new bar.SingleBar(
-  { etaBuffer: 2000 },
+  { etaBuffer: 2000, fps: 2, etaAsynchronousUpdate: true },
   bar.Presets.shades_classic
 );
-const setup = new bar.SingleBar({ etaBuffer: 0 }, bar.Presets.shades_classic);
 const colorSet = new Set<number>();
 
 // setup.start(256 * 256 * 256, 0);
@@ -17,7 +16,6 @@ for (let r = 0; r < 256; r++)
   for (let g = 0; g < 256; g++)
     for (let b = 0; b < 256; b++) {
       colorSet.add(b + (g << 8) + (r << 16));
-      setup.increment();
     }
 // setup.stop();
 const OFFSET = 0.1;
@@ -31,14 +29,7 @@ function calculateLAB(l: number, a: number, b: number) {
 
   colorSet.delete(flr(bl) + (flr(g) << 8) + (flr(r) << 16));
 }
-function calculateGrey(l: number) {
-  const { r, g, b } = lab(l, 0, 0).rgb();
 
-  if (r > 255 || g > 255 || b > 255) return;
-  const { floor: flr } = Math;
-
-  colorSet.delete(flr(b) + (flr(g) << 8) + (flr(r) << 16));
-}
 filter.start((360 / OFFSET) * (135 / OFFSET), 0);
 for (let h = 0; h < CONST.hueMax; h = h + OFFSET) {
   const ha = Math.cos(h * deg2rad);
@@ -55,4 +46,10 @@ for (let h = 0; h < CONST.hueMax; h = h + OFFSET) {
   }
 }
 filter.stop();
-console.log(colorSet.size / 0xffffff);
+console.log(
+  'missing colour percentage:',
+  ((colorSet.size / 0xffffff) * 100).toFixed(2),
+  '\b%'
+);
+console.log('no of missing colours:', colorSet.size);
+if (colorSet.size < 64) console.log(`missing colours:`, colorSet.values());

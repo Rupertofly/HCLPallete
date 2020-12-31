@@ -12,6 +12,7 @@ export interface Colour {
     lightness: number;
   };
 }
+export type SemiColour = Partial<Colour>;
 export type ColourProperties = 'hue' | 'chroma' | 'lightness';
 export interface HueInfo {
   id: string;
