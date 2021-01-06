@@ -1,8 +1,8 @@
 Components:
-  ☐ Slider
-    ☐ Hue Slider
-    ☐ Chroma Slider
-    ☐ Lightness Slider
+  ✔ Slider @done(21-01-06 20:44)
+    ✔ Hue Slider @done(21-01-06 20:44)
+    ✔ Chroma Slider @done(21-01-06 20:44)
+    ✔ Lightness Slider @done(21-01-06 20:44)
   ☐ Slider List
   ☐ Swatch
   ☐ Swatch Panel
@@ -12,4 +12,3 @@ Components:
   ☐ Exporter
   ☐ Voronoi Graph
   ☐ Store
-
