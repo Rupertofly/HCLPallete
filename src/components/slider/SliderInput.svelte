@@ -11,12 +11,12 @@
     padding: 0.05em;
     background: none;
     margin: none;
-    margin-top: -0.8em;
+    margin-top: -0.5em;
     text-align: center;
     font-family: Nunito, 'sans-serif';
     font-weight: 700;
-    width: 4.5rem;
-    font-size: 1.5rem;
+    width: 3em;
+    font-size: 1em;
     font-feature-settings: 'tnum';
     font-variant-numeric: tabular-nums;
   }

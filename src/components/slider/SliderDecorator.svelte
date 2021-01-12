@@ -11,11 +11,14 @@
 
 <style>
   .plain {
-    display: flex;
+    font-size: 8pt;
+    display: block;
+    user-select: none;
+    -webkit-user-select: none;
   }
   .squircle {
-    width: 8em;
-    height: 8em;
+    width: 4em;
+    height: 4em;
     background-color: var(--colour-fill, blue);
     display: block;
     margin: 0.5em;
@@ -25,6 +28,10 @@
     display: flex;
     flex-direction: row;
     align-self: center;
+  }
+  fieldset {
+    display: flex;
+    width: fit-content;
   }
 </style>
 
@@ -36,38 +43,43 @@
   </svg>
   {#each $pal.colours[0] as hue, h}
     <div class="plain">
-      {#each $pal.colours as item, i}
-        <Slider
-          colour={$pal.colours[i][h]}
-          location={{ hue: i, shade: h }}
-          dispatcher={dispatch}
-          property="lightness"
-          type="spectrum" />
-      {/each}
-
-      {#each $pal.colours as item, i}
-        <Slider
-          colour={$pal.colours[i][h]}
-          location={{ hue: i, shade: h }}
-          dispatcher={dispatch}
-          property="chroma"
-          type="spectrum" />
-      {/each}
-      {#each $pal.colours as item, i}
-        <Slider
-          colour={$pal.colours[i][h]}
-          location={{ hue: i, shade: h }}
-          dispatcher={dispatch}
-          property="hue"
-          type="spectrum" />
-      {/each}
-      <div class="vain">
+      <fieldset>
+        {#each $pal.colours as item, i}
+          <Slider
+            colour={$pal.colours[i][h]}
+            location={{ hue: i, shade: h }}
+            dispatcher={dispatch}
+            property="lightness"
+            type="spectrum" />
+        {/each}
+      </fieldset>
+      <fieldset>
+        {#each $pal.colours as item, i}
+          <Slider
+            colour={$pal.colours[i][h]}
+            location={{ hue: i, shade: h }}
+            dispatcher={dispatch}
+            property="chroma"
+            type="spectrum" />
+        {/each}
+      </fieldset>
+      <fieldset>
+        {#each $pal.colours as item, i}
+          <Slider
+            colour={$pal.colours[i][h]}
+            location={{ hue: i, shade: h }}
+            dispatcher={dispatch}
+            property="hue"
+            type="spectrum" />
+        {/each}
+      </fieldset>
+      <fieldset class="vain">
         {#each $pal.colours as item, i}
           <div
             class="squircle"
             style="--colour-fill: {$pal.colours[i][h].hexColour};" />
         {/each}
-      </div>
+      </fieldset>
     </div>
   {/each}
   {#if false}

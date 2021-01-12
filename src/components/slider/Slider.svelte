@@ -159,7 +159,7 @@
 <div>
   <svg
     viewBox="-0.5 -0.5 2 5"
-    style="width: 8em;height: auto; --solid-fill:{hexColour};touch-action: none;"
+    style="width: 4em;height: auto; --solid-fill:{hexColour};touch-action: none;"
     bind:this={svgElem}
     on:pointermove={pointermove}
     on:lostpointercapture={pointerend}>
