@@ -1,14 +1,14 @@
-import Slider from './SliderStoryDecorator.svelte';
+import Pl from './Pallete.svelte';
 export default {
-  title: 'Slider',
-  component: Slider,
+  title: 'Swatch',
+  component: Pl,
   args: {
     value: 2,
     hexColor: '#fee088',
   },
 };
 export const Slide = (args) => ({
-  Component: Slider,
+  Component: Pl,
   props: {
     ...args,
   },

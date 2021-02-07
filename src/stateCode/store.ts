@@ -1,7 +1,7 @@
 import type { State, Colour, PalleteImport } from './state';
 import * as Actions from './actions';
 import * as d3 from 'd3';
-import uniq, { uniqueId } from 'uniqueId';
+import uniq, { uniqueId } from '../uniqueId';
 import * as NTC from 'ntcjs';
 const TAU = 2 * Math.PI;
 const fromDeg = (n) => n * (TAU / 360);

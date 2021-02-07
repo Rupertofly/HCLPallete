@@ -1,5 +1,5 @@
 import * as bar from 'cli-progress';
-import * as CONST from './appConstants';
+import * as CONST from ''../../appConstants';';
 
 import { lab } from 'd3-color';
 const { min, max } = Math;

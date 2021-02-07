@@ -5,13 +5,11 @@
     Colour,
     Dispatcher,
     setValue,
-  } from 'stateCode';
+  } from '../../stateCode';
   import { onMount } from 'svelte';
   import SliderThumb from './SliderThumb.svelte';
   import SliderNotch from './SliderNotch.svelte';
   import SliderBackground from './SliderBackground.svelte';
-  import * as ns from 'open-simplex-noise';
-  import * as tri from './BuildTriangle';
   import { animate } from './store';
   import {
     chromaMax,
@@ -22,7 +20,7 @@
     lightnessMin,
     propToT,
     TtoProp,
-  } from 'appConstants';
+  } from '../../appConstants';
   import SliderInput from './SliderInput.svelte';
   import type { symbol } from 'd3';
   import SliderGenerics from './SliderGenerics.svelte';
@@ -148,21 +146,14 @@
   }
 </script>
 
-<style>
-  div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-</style>
-
 <div>
   <svg
     viewBox="-0.5 -0.5 2 5"
     style="width: 4em;height: auto; --solid-fill:{hexColour};touch-action: none;"
     bind:this={svgElem}
     on:pointermove={pointermove}
-    on:lostpointercapture={pointerend}>
+    on:lostpointercapture={pointerend}
+  >
     <defs>
       {#if !hasWave}
         <SliderGenerics />
@@ -174,13 +165,15 @@
       style="fill:#0f0f0f;"
       rx={0.1875}
       x={-0.0625}
-      y={-0.0625} />
+      y={-0.0625}
+    />
     <rect
       width={1}
       height={4}
       style="fill:#ffffff;"
       rx={0.125}
-      bind:this={bgElem} />
+      bind:this={bgElem}
+    />
     <SliderBackground {type} value={transformed} {colour} {property} />
     <SliderThumb {hexColour} value={transformed} on:pointerdown={pointerdown} />
     <SliderNotch {hexColour} value={apparentTransformed} />
@@ -189,5 +182,14 @@
     incomingValue={colour[property]}
     {min}
     {max}
-    on:change={updateInput} />
+    on:change={updateInput}
+  />
 </div>
+
+<style>
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+</style>

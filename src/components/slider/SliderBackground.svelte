@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { chromaMax, hueMax, lightnessMax } from 'appConstants';
+  import { chromaMax, hueMax, lightnessMax } from '../../appConstants';
 
   import { hcl } from 'd3';
 
-  import type { Colour, ColourProperties } from 'stateCode';
-  import uniqueId from 'uniqueId';
+  import type { Colour, ColourProperties } from '../../stateCode';
+  import uniqueId from '../../uniqueId';
   import { animate } from './store';
 
   export let type: 'solid' | 'spectrum' | 'wave';
@@ -57,12 +57,6 @@
     type !== 'spectrum' ? `transform: translateY(${value}px);` : '';
 </script>
 
-<style>
-  .solid {
-    fill: var(--solid-fill);
-  }
-</style>
-
 <g clip-path="url(#cl)" style="">
   {#if type === 'wave' && value < 3.95 && value > 0.05}
     <!-- //@ts-ignore -->
@@ -80,3 +74,9 @@
     <rect width={1} height={4} class="solid" style="{isPartial}{aniStyle}" />
   {/if}
 </g>
+
+<style>
+  .solid {
+    fill: var(--solid-fill);
+  }
+</style>

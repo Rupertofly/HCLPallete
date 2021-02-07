@@ -1333,13 +1333,13 @@
     execa "^4.0.3"
     npm-run-path "^4.0.1"
 
-"@snowpack/plugin-svelte@^3.3.0":
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/@snowpack/plugin-svelte/-/plugin-svelte-3.3.1.tgz#67ed102191b3c7a8c1efc74f5189ca848ef093d8"
-  integrity sha512-2RqwAODn+VxcjEF8/rtUnQgHZPM5hpj1TpCnQSJNFi4bu4EqBhrKMEVsXXno7omDLCXa/zTo1+6QgnE15KMoKA==
+"@snowpack/plugin-svelte@^3.5.0":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/@snowpack/plugin-svelte/-/plugin-svelte-3.5.0.tgz#c23a9e2d0cb68609462f8ca78e11befc5a7e8399"
+  integrity sha512-9Fn1CbHviNjTKacURqRE6yjQ/s1igxtgEgkC1pKIz/lGk4I7mBNQdcBN5TVqCGRmxPh1fC/AnMR0VKQWWndxhw==
   dependencies:
     rollup-plugin-svelte "^7.0.0"
-    svelte-hmr "^0.12.0"
+    svelte-hmr "^0.12.1"
     svelte-preprocess "^4.6.0"
 
 "@storybook/addon-actions@6.1.11", "@storybook/addon-actions@^6.1.11":
@@ -11340,10 +11340,10 @@ svelte-dev-helper@^1.1.9:
   resolved "https://registry.yarnpkg.com/svelte-dev-helper/-/svelte-dev-helper-1.1.9.tgz#7d187db5c6cdbbd64d75a32f91b8998bde3273c3"
   integrity sha1-fRh9tcbNu9ZNdaMvkbiZi94yc8M=
 
-svelte-hmr@^0.12.0:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.12.0.tgz#de3616d09a902fb7b0a014f1b3acdded1da352f6"
-  integrity sha512-NYpzqME/jlTBL+JLilznH2QnQbREJvwikWjLNpJuekhcCqIWbnO7hrNnMZCgAKiQHAKEdiohtjARJhO7nMZGbg==
+svelte-hmr@^0.12.1:
+  version "0.12.5"
+  resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.12.5.tgz#afbdd44daaf5eca901727af2f80571855d9e9985"
+  integrity sha512-AEPtbwF6h+B5jI/aQhvk61wXrW6bxOGQecI/GmRd+LCvg+s4P0VQ3Xseg18foAM6ZemBZrGCRCopeZZS4+X7cg==
 
 svelte-loader@^2.13.6:
   version "2.13.6"

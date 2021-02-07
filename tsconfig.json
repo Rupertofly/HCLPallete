@@ -6,6 +6,7 @@
     "target": "ES2015",
     "jsx": "react",
     "importHelpers": false,
+    "importsNotUsedAsValues": "preserve",
     "moduleResolution": "node",
     "esModuleInterop": false,
     "emitDecoratorMetadata": true,
